@@ -26,7 +26,7 @@ with open("data.json", "r", encoding="utf-8") as f:
 
 ini.read("config.ini")
 
-TESTING = bool(ini["DEFAULT"]["TESTING"])
+TESTING = ini["DEFAULT"].getboolean("TESTING")
 TEST_GUILD_ID = int(ini["DEFAULT"]["TEST_GUILD_ID"])
 
 TOKEN = ini["DEFAULT"]["TOKEN"]
@@ -48,10 +48,11 @@ cooldowns = {}
 intents = discord.Intents.default()
 intents.guilds = True
 
+
 class Clanker(commands.AutoShardedBot):
     def __init__(self):
         super().__init__(
-            command_prefix="lol this bot uses slash commands idot", # this literally does nothing im being serious lol - pxsl
+            command_prefix="lol this bot uses slash commands idot",
             intents=intents
         )
 
@@ -77,7 +78,6 @@ class Clanker(commands.AutoShardedBot):
                 timeout=timeout,
                 headers=headers
             ) as session:
-
                 async with session.post(
                     PXSL_API_URL,
                     json=payload
@@ -190,7 +190,7 @@ class Clanker(commands.AutoShardedBot):
         )
 
         return commands_data
-    
+
     async def update_commands_on_api(self):
         try:
             with open(
@@ -264,18 +264,14 @@ class Clanker(commands.AutoShardedBot):
         return {
             "guilds": guild_count,
             "users": total_members,
-
             "current_ccu": current_ccu,
             "peak_ccu": self.peak_ccu,
-
             "commands_since_restart": self.total_commands,
             "commands_per_minute": len(recent_commands),
             "last_command_at": self.last_command_at,
-
             "uptime_seconds": int(
                 now - self.start_time
             ),
-
             "updated_at": int(now)
         }
 
@@ -319,19 +315,19 @@ class Clanker(commands.AutoShardedBot):
                     f"[BOOT] Loaded cog: {file}"
                 )
 
-        self.dbl = topgg.DBLClient(
-            self,
-            TOPGG_TOKEN
-        )
+        if not TESTING:
+            self.dbl = topgg.DBLClient(
+                self,
+                TOPGG_TOKEN
+            )
 
         print("[BOOT] Syncing commands...")
 
         if TESTING:
-            for i in range(5):
-                print(
-                    "[BOOT] Running in TESTING mode, "
-                    "syncing to TEST guild only."
-                )
+            print(
+                "[BOOT] Running in TESTING mode, "
+                "syncing to TEST guild only."
+            )
 
             guild = discord.Object(
                 id=TEST_GUILD_ID
@@ -362,14 +358,16 @@ class Clanker(commands.AutoShardedBot):
                 await self.tree.sync()
 
                 print(
-                    "[SYNC] Cleared leftover commands "
-                    "from test guild"
+                    "[SYNC] Synced global commands"
                 )
 
-            except Exception:
-                pass
+            except Exception as e:
+                print(
+                    f"[SYNC] Failed to sync global commands: "
+                    f"{type(e).__name__}: {e}"
+                )
 
-            synced = await self.tree.sync()
+            synced = self.tree.get_commands()
 
             print(
                 f"[SYNC] Synced "
@@ -416,16 +414,16 @@ class Clanker(commands.AutoShardedBot):
             )
 
     status_cycle = itertools.cycle([
-    "👀 clanking in {guild_count:,} servers!",
-    "🌐 https://clanker.pxsl.dev/",
-    "🗣️ https://discord.gg/YtQdrkxfg7",
-    "💜 https://pxsl.dev/thanks/"
+        "👀 clanking in {guild_count:,} servers!",
+        "🌐 https://clanker.pxsl.dev/",
+        "🗣️ https://discord.gg/YtQdrkxfg7",
+        "💜 https://pxsl.dev/thanks/"
     ])
 
     @tasks.loop(seconds=5)
     async def statusloop(self):
-
         guild_count = len(self.guilds)
+
         total_members = sum(
             guild.member_count or 0
             for guild in self.guilds
@@ -436,7 +434,9 @@ class Clanker(commands.AutoShardedBot):
             total_members=total_members
         )
 
-        activity = discord.CustomActivity(name=status)
+        activity = discord.CustomActivity(
+            name=status
+        )
 
         await self.change_presence(
             activity=activity
@@ -509,8 +509,27 @@ class Clanker(commands.AutoShardedBot):
     async def before_api_stats_loop(self):
         await self.wait_until_ready()
 
+
 bot = Clanker()
 bot.data = data
+
+
+def extract_interaction_options(options):
+    values = []
+
+    for option in options:
+        if "value" in option:
+            values.append(str(option["value"]))
+
+        nested_options = option.get("options")
+
+        if nested_options:
+            values.extend(
+                extract_interaction_options(nested_options)
+            )
+
+    return values
+
 
 @bot.event
 async def on_ready():
@@ -522,52 +541,54 @@ async def on_ready():
         "Clanker is alive 😎"
     )
 
+
 @bot.event
 async def on_interaction(
     interaction: discord.Interaction
 ):
-    if interaction.type == discord.InteractionType.application_command:
-        now = time.time()
+    if interaction.type != discord.InteractionType.application_command:
+        return
 
-        bot.active_users[
-            interaction.user.id
-        ] = now
+    now = time.time()
 
-        expired = [
-            uid
-            for uid, last_seen in bot.active_users.items()
-            if now - last_seen > 300
-        ]
+    bot.active_users[
+        interaction.user.id
+    ] = now
 
-        for uid in expired:
-            del bot.active_users[uid]
+    expired = [
+        uid
+        for uid, last_seen in bot.active_users.items()
+        if now - last_seen > 300
+    ]
 
-        bot.peak_ccu = max(
-            bot.peak_ccu,
-            len(bot.active_users)
-        )
+    for uid in expired:
+        del bot.active_users[uid]
 
-        cmd = interaction.data.get("name")
-        options = interaction.data.get("options", [])
+    bot.peak_ccu = max(
+        bot.peak_ccu,
+        len(bot.active_users)
+    )
 
-        args = (
-            " ".join(
-                str(opt["value"])
-                for opt in options
-            )
-            if options
-            else ""
-        )
+    cmd = interaction.data.get("name", "unknown")
+    options = interaction.data.get("options", [])
 
-        bot.total_commands += 1
-        bot.command_timestamps.append(now)
-        bot.last_command_at = now
+    option_values = extract_interaction_options(
+        options
+    )
 
-        print(
-            f"[COMMAND LOG] "
-            f"@{interaction.user}: "
-            f"{cmd} {args}"
-        )
+    args = " ".join(option_values)
+
+    bot.total_commands += 1
+    bot.command_timestamps.append(now)
+    bot.last_command_at = now
+
+    print(
+        f"[COMMAND LOG] "
+        f"@{interaction.user}: "
+        f"{cmd}"
+        f"{' ' + args if args else ''}"
+    )
+
 
 class WelcomeView(discord.ui.View):
     def __init__(self):
@@ -588,6 +609,7 @@ class WelcomeView(discord.ui.View):
                 url="https://clanker.pxsl.dev/legal"
             )
         )
+
 
 @bot.event
 async def on_guild_join(guild: discord.Guild):
@@ -725,8 +747,10 @@ async def on_guild_join(guild: discord.Guild):
         f"{guild.name} ({guild.id})"
     )
 
+
 async def main():
     async with bot:
         await bot.start(TOKEN)
+
 
 asyncio.run(main())
