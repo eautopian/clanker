@@ -67,7 +67,7 @@ class Clanker(commands.AutoShardedBot):
         headers = {
             "Authorization": f"Bearer {PXSL_API_KEY}",
             "Content-Type": "application/json",
-            "User-Agent": "Clanker/1.0 (https://clanker.pxsl.dev)"
+            "User-Agent": "Clanker (https://clanker.pxsl.dev)"
         }
 
         timeout = aiohttp.ClientTimeout(total=15)
