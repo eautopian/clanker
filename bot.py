@@ -1,5 +1,5 @@
 # pxsl :3
-# dashcrikeydash
+# dashcrikeydash (stinks)
 
 # i just want to say, we are sorry for writing some of the code in a terrible way.
 # We are literally not cleaning ts up - pxsl
