@@ -4,6 +4,7 @@ from discord import app_commands, Interaction, User, TextChannel
 from discord.ext import commands
 import discord
 import random
+from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
 
 def uwuify(text: str) -> str:
     faces = ["(・`ω´・)", "uwu", "owo", ">w<", "^w^"]
@@ -83,7 +84,7 @@ class Text(commands.GroupCog, group_name="text"):
                         "Sorry, Clanker can only be installed in a server.\n\n"
                         "Please add Clanker to a server before using these commands."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -100,7 +101,7 @@ class Text(commands.GroupCog, group_name="text"):
                         "Clanker isn't installed in this server.\n\n"
                         "Please add Clanker to this server before using these commands."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -114,7 +115,7 @@ class Text(commands.GroupCog, group_name="text"):
                         "I couldn't verify whether Clanker is installed "
                         "in this server."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -128,7 +129,7 @@ class Text(commands.GroupCog, group_name="text"):
                         "Discord didn't let me verify whether Clanker "
                         "is installed in this server. Please try again."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -149,7 +150,7 @@ class Text(commands.GroupCog, group_name="text"):
             embed = discord.Embed(
                 title="Error ❌",
                 description="Cannot use this command here!",
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -163,7 +164,7 @@ class Text(commands.GroupCog, group_name="text"):
         embed = discord.Embed(
             title=f"{action_name} Text ⌨️",
             description=transformed,
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)

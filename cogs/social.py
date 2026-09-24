@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 import aiohttp
 from io import BytesIO
 from urllib.parse import urlencode
+from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
 
 click_count = 0
 
@@ -50,7 +51,7 @@ class Social(commands.GroupCog, group_name="social"):
                         "Sorry, Clanker can only be installed in a server.\n\n"
                         "Please add Clanker to a server before using these commands."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -67,7 +68,7 @@ class Social(commands.GroupCog, group_name="social"):
                         "Clanker isn't installed in this server.\n\n"
                         "Please add Clanker to this server before using these commands."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -81,7 +82,7 @@ class Social(commands.GroupCog, group_name="social"):
                         "I couldn't verify whether Clanker is installed "
                         "in this server."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -95,7 +96,7 @@ class Social(commands.GroupCog, group_name="social"):
                         "Discord didn't let me verify whether Clanker "
                         "is installed in this server. Please try again."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -320,7 +321,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="Expose Time! 🕵️‍♂️",
             description=random.choice(exposes),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_thumbnail(url=user.display_avatar.url)
@@ -362,7 +363,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="Compliment Time! 💖",
             description=random.choice(compliments),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_thumbnail(url=user.display_avatar.url)
@@ -400,7 +401,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="Roast Time! 🔥",
             description=random.choice(roasts),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_thumbnail(url=user.display_avatar.url)
@@ -425,7 +426,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="Slap 💥",
             description=f"**{user.name}** got slapped with a force of **{random.randint(1, 100)}%**!",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_thumbnail(url=user.display_avatar.url)
@@ -450,7 +451,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="Hug 🫂",
             description=f"**{user.name}** got hugged with a force of **{random.randint(1, 100)}%**!",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_thumbnail(url=user.display_avatar.url)
@@ -475,7 +476,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="Poke 👉",
             description=f"**{user.name}** got poked with a force of **{random.randint(1, 100)}%**!",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_thumbnail(url=user.display_avatar.url)
@@ -500,7 +501,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="High Five 👏",
             description=f"**{user.name}** got high fived with a force of **{random.randint(1, 100)}%**!",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_thumbnail(url=user.display_avatar.url)
@@ -524,7 +525,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="Rating ⭐",
             description=f"I rate **{thing}** a **{rating}/10**!",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -555,7 +556,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="You have been nominated! 🫡",
             description=random.choice(nominations),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_thumbnail(url=user.display_avatar.url)
@@ -614,7 +615,7 @@ class Social(commands.GroupCog, group_name="social"):
 
         embed = discord.Embed(
             title="Court ⚖️",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.add_field(
@@ -692,7 +693,7 @@ class Social(commands.GroupCog, group_name="social"):
 
         embed = discord.Embed(
             title="Ship 💘",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.add_field(
@@ -735,7 +736,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="How Silly? 🤪",
             description=f"**{user.name}** is **{score}%** silly!",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -760,7 +761,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="How Dumb? 😵‍💫",
             description=f"**{user.name}** is **{score}%** dumb!",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -790,13 +791,13 @@ class Social(commands.GroupCog, group_name="social"):
             embed = discord.Embed(
                         title=f"How {thing.title()}? 🤔",
                         description=f"**{user.name}** is **{score}%** {thing}! (also she is very autistic just sayin like extremely, like beyond the point of no return.)",
-                        color=discord.Color.blurple()
+                        color=SUCCESS_COLOUR
                     )
         else:
             embed = discord.Embed(
                         title=f"How {thing.title()}? 🤔",
                         description=f"**{user.name}** is **{score}%** {thing}!",
-                        color=discord.Color.blurple()
+                        color=SUCCESS_COLOUR
                     )
 
         await interaction.response.send_message(embed=embed)
@@ -818,7 +819,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="Loneliness Meter 🧍",
             description=f"**{user.name}** is **{score}%** lonely 😔",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -840,7 +841,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="IQ Test 🧠",
             description=f"**{user.name}** has an IQ of **{iq_score}** (trust me bro)",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -877,7 +878,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="🎱 8-Ball",
             description=f"Question: {question}\nAnswer: **{answer}**",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -921,7 +922,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="🎱 7-Ball",
             description=f"Question: {question}\nAnswer: **{answer}**",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -939,7 +940,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="🖱️ Global Clicker",
             description="Click the button below to increase the global counter!",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_footer(
@@ -973,7 +974,7 @@ class Social(commands.GroupCog, group_name="social"):
 
         embed = discord.Embed(
             title=f"🤖 {user.name}'s Profile",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_thumbnail(
@@ -1103,7 +1104,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="Bad Advice 🤔",
             description=random.choice(advice),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -1173,7 +1174,7 @@ class Social(commands.GroupCog, group_name="social"):
         embed = discord.Embed(
             title="Good Advice 👍",
             description=random.choice(advice),
-            color=discord.Color.green()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -1227,7 +1228,7 @@ class Social(commands.GroupCog, group_name="social"):
                                     f"The Pop Cat API returned "
                                     f"`{response.status}`."
                                 ),
-                                color=discord.Color.red()
+                                color=BAD_COLOUR
                             ),
                             ephemeral=True
                         )
@@ -1247,7 +1248,7 @@ class Social(commands.GroupCog, group_name="social"):
                 embed=discord.Embed(
                     title="❌ Generation Failed",
                     description=f"```{e}```",
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -1266,7 +1267,7 @@ class Social(commands.GroupCog, group_name="social"):
                         embed=discord.Embed(
                             title="❌ Error",
                             description="Couldn't fetch an AITA post... sorry!",
-                            color=discord.Color.blurple()
+                            color=BAD_COLOUR
                         )
                     )
                     return
@@ -1279,7 +1280,7 @@ class Social(commands.GroupCog, group_name="social"):
             title=post["title"],
             description=post["text"],
             url=post["url"],
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_footer(text="r/AmItheAsshole • Powered by Pxsl's API and Reddit")

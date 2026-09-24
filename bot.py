@@ -8,7 +8,7 @@
 
 # eautopian was here from the pixel development computer
 
-# eautopian is poopy <3
+# eautopian is poopy :)
 
 import discord
 from discord.ext import commands, tasks
@@ -20,6 +20,7 @@ import topgg
 import aiohttp
 import itertools
 import configparser
+from cogs.config import SUCCESS_COLOUR
 
 ini = configparser.ConfigParser()
 
@@ -632,7 +633,7 @@ async def on_guild_join(guild: discord.Guild):
 
             "**Thanks for choosing Clanker! 🔧**"
         ),
-        colour=discord.Colour.blurple()
+        colour=SUCCESS_COLOUR
     )
 
     embed.set_footer(

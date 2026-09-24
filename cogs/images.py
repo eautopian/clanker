@@ -10,6 +10,7 @@ import os
 import tempfile
 import shutil
 import random
+from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
 
 class Images(commands.GroupCog, group_name="image"):
     image_1 = app_commands.Group(
@@ -36,7 +37,7 @@ class Images(commands.GroupCog, group_name="image"):
                         "Sorry, Clanker can only be installed in a server.\n\n"
                         "Please add Clanker to a server before using these commands."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -54,7 +55,7 @@ class Images(commands.GroupCog, group_name="image"):
                         "Clanker isn't installed in this server.\n\n"
                         "Please add Clanker to this server before using these commands."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -67,7 +68,7 @@ class Images(commands.GroupCog, group_name="image"):
                         "I couldn't verify whether Clanker is installed "
                         "in this server."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -80,7 +81,7 @@ class Images(commands.GroupCog, group_name="image"):
                         "Discord didn't let me verify whether Clanker "
                         "is installed in this server. Please try again."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -97,7 +98,7 @@ class Images(commands.GroupCog, group_name="image"):
         embed = discord.Embed(
             title=title,
             description=desc,
-            color=discord.Color.red()
+            color=BAD_COLOUR
         )
 
         if interaction.response.is_done():
@@ -325,7 +326,7 @@ class Images(commands.GroupCog, group_name="image"):
         embed = discord.Embed(
             title=title,
             description=desc if desc else "",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_image(
@@ -666,7 +667,7 @@ class Images(commands.GroupCog, group_name="image"):
             description=(
                 "GIFs are limited to 256 colors - quality may drop ⚠️"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_image(
@@ -790,7 +791,7 @@ class Images(commands.GroupCog, group_name="image"):
             description=(
                 "Transparency has been replaced with a white background."
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_image(
@@ -850,7 +851,7 @@ class Images(commands.GroupCog, group_name="image"):
         embed = discord.Embed(
             title="Image → WebP 🖼️",
             description="Converted successfully.",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_image(
@@ -1069,7 +1070,7 @@ class Images(commands.GroupCog, group_name="image"):
 
             embed = discord.Embed(
                 title="Caption 📝",
-                color=discord.Color.blurple()
+                color=SUCCESS_COLOUR
             )
 
             embed.set_image(
@@ -1126,7 +1127,7 @@ class Images(commands.GroupCog, group_name="image"):
                         description=(
                             "Couldn't find a recent message from that user."
                         ),
-                        color=discord.Color.red()
+                        color=BAD_COLOUR
                     )
                 )
 
@@ -1135,7 +1136,7 @@ class Images(commands.GroupCog, group_name="image"):
                 embed=discord.Embed(
                     title="Error ❌",
                     description="Provide text or a user to quote.",
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 )
             )
 
@@ -1326,7 +1327,7 @@ class Images(commands.GroupCog, group_name="image"):
                 embed=discord.Embed(
                     title="Error ❌",
                     description="Couldn't create the quote image.",
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 )
             )
 

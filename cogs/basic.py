@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 import random
 import discord
 import json
+from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
 
 class WelcomeView(discord.ui.View):
     def __init__(self):
@@ -44,7 +45,7 @@ class Basic(commands.GroupCog, group_name="basic"):
                         "Sorry, Clanker can only be installed in a server.\n\n"
                         "Please add Clanker to a server before using these commands."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -61,7 +62,7 @@ class Basic(commands.GroupCog, group_name="basic"):
                         "Clanker isn't installed in this server.\n\n"
                         "Please add Clanker to this server before using these commands."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -75,7 +76,7 @@ class Basic(commands.GroupCog, group_name="basic"):
                         "I couldn't verify whether Clanker is installed "
                         "in this server."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -89,7 +90,7 @@ class Basic(commands.GroupCog, group_name="basic"):
                         "Discord didn't let me verify whether Clanker "
                         "is installed in this server. Please try again."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -130,7 +131,7 @@ class Basic(commands.GroupCog, group_name="basic"):
 
                 "**Thanks for choosing Clanker! 🔧**"
             ),
-            colour=discord.Colour.blurple()
+            colour=SUCCESS_COLOUR
         )
 
         embed.set_footer(
@@ -166,7 +167,7 @@ class Basic(commands.GroupCog, group_name="basic"):
         embed = discord.Embed(
             title="Hello! 👋",
             description=random.choice(hello_responses),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -182,7 +183,7 @@ class Basic(commands.GroupCog, group_name="basic"):
         embed = discord.Embed(
             title="Pong! 🏓",
             description=f"Ping: {round(self.bot.latency * 1000)} ms",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -227,7 +228,7 @@ class Basic(commands.GroupCog, group_name="basic"):
             description=(
                 f"The bot has been online for: {uptime_str}"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -252,7 +253,7 @@ class Basic(commands.GroupCog, group_name="basic"):
                 f"Clanker serves **{users:,}** users "
                 f"across **{servers:,}** servers!"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -293,7 +294,7 @@ class Basic(commands.GroupCog, group_name="basic"):
         embed = discord.Embed(
             title="Command Count 🤖",
             description=desc,
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -321,7 +322,7 @@ class Basic(commands.GroupCog, group_name="basic"):
             description=(
                 f"Clanker is currently running v{v}!"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -361,7 +362,7 @@ class Basic(commands.GroupCog, group_name="basic"):
 
         embed = discord.Embed(
             title="Info 🤖",
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.add_field(
@@ -409,7 +410,7 @@ class Basic(commands.GroupCog, group_name="basic"):
             description=(
                 "Help us grow by voting for the bot on top.gg!"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.add_field(
@@ -437,7 +438,7 @@ class Basic(commands.GroupCog, group_name="basic"):
                 "[Click here to invite the bot]"
                 "(https://clanker.pxsl.dev/invite/)"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)
@@ -536,7 +537,7 @@ class Basic(commands.GroupCog, group_name="basic"):
                         f"({page_num}/{total_pages})"
                     ),
                     description=description,
-                    color=discord.Color.blurple()
+                    color=SUCCESS_COLOUR
                 )
 
                 pages.append(embed)
@@ -546,7 +547,7 @@ class Basic(commands.GroupCog, group_name="basic"):
                 discord.Embed(
                     title="Help",
                     description="No commands found.",
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 )
             )
 
@@ -620,7 +621,7 @@ class Basic(commands.GroupCog, group_name="basic"):
                 "test, support, and tolerate this stupid little bot.\n\n"
                 "[**view the full credits →**](https://clanker.pxsl.dev/credits/)"
             ),
-            color=discord.Colour.blurple()
+            color=SUCCESS_COLOUR
         )
 
         embed.set_footer(text="thank you to everyone who helped make Clanker what it is 💜")
@@ -643,7 +644,7 @@ class Basic(commands.GroupCog, group_name="basic"):
                 "[🌐 Visit the Website](https://clanker.pxsl.dev/)\n"
                 "[💜 Support Us](https://pxsl.dev/thanks/)"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(embed=embed)

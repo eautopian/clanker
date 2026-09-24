@@ -7,6 +7,7 @@ import json
 import random
 import time
 import sqlite3
+from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
 
 DB_PATH = "economy.db"
 
@@ -26,7 +27,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                         "Sorry, Clanker can only be installed in a server.\n\n"
                         "Please add Clanker to a server before using these commands."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -43,7 +44,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                         "Clanker isn't installed in this server.\n\n"
                         "Please add Clanker to this server before using these commands."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -57,7 +58,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                         "I couldn't verify whether Clanker is installed "
                         "in this server."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -71,7 +72,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                         "Discord didn't let me verify whether Clanker "
                         "is installed in this server. Please try again."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -277,7 +278,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 f"🏦 Bank: **{bank}**\n"
                 f"📊 Total: **{total}**"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(
@@ -312,7 +313,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                     f"You can claim your daily again in "
                     f"**{self.format_time(remaining)}**"
                 ),
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -344,7 +345,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 f"You received **{reward} coins**!\n"
                 f"🔥 Daily Streak: **{user['daily_streak']}**"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(
@@ -379,7 +380,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                     f"You can claim your weekly again in "
                     f"**{self.format_time(remaining)}**"
                 ),
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -411,7 +412,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 f"You received **{reward} coins**!\n"
                 f"🔥 Weekly Streak: **{user['weekly_streak']}**"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(
@@ -446,7 +447,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                     f"You can work again in "
                     f"**{self.format_time(remaining)}**"
                 ),
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -477,7 +478,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 f"{job_text}\n\n"
                 f"💰 Earned **{reward} coins**"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(
@@ -525,7 +526,7 @@ class Economy(commands.GroupCog, group_name="economy"):
             embed = discord.Embed(
                 title="❌ ATM Error",
                 description="Amount must be greater than 0.",
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -548,7 +549,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                         f"You can deposit again in "
                         f"**{self.format_time(remaining)}**"
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 )
 
                 await interaction.response.send_message(
@@ -562,7 +563,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 embed = discord.Embed(
                     title="❌ ATM Error",
                     description="you don't have enough in your wallet.",
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 )
 
                 await interaction.response.send_message(
@@ -584,7 +585,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                     f"Deposited **{amount} coins** "
                     f"into your bank."
                 ),
-                color=discord.Color.blurple()
+                color=SUCCESS_COLOUR
             )
 
         else:
@@ -592,7 +593,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 embed = discord.Embed(
                     title="❌ ATM Error",
                     description="you don't have that much in your bank",
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 )
 
                 await interaction.response.send_message(
@@ -613,7 +614,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                     f"Withdrew **{amount} coins** "
                     f"from your bank."
                 ),
-                color=discord.Color.blurple()
+                color=SUCCESS_COLOUR
             )
 
         await interaction.response.send_message(
@@ -636,7 +637,7 @@ class Economy(commands.GroupCog, group_name="economy"):
             embed = discord.Embed(
                 title="❌ Rob Failed",
                 description="You can't rob yourself!",
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -673,7 +674,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                     f"You can rob again in "
                     f"**{self.format_time(remaining)}**"
                 ),
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -690,7 +691,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                     "This user has no coins in "
                     "their wallet to rob!"
                 ),
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -721,7 +722,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 f"You stole **{stolen} coins** "
                 f"from {target.mention}!"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(
@@ -771,7 +772,7 @@ class Economy(commands.GroupCog, group_name="economy"):
             embed = discord.Embed(
                 title="❌ Invalid Bet",
                 description="Invalid or insufficient balance.",
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -824,7 +825,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 f"Ball landed on: {emoji[result]} **{result}**\n\n"
                 f"{outcome}"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(
@@ -870,7 +871,7 @@ class Economy(commands.GroupCog, group_name="economy"):
             embed = discord.Embed(
                 title="❌ Invalid Bet",
                 description="Invalid or insufficient balance.",
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -910,7 +911,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 f"It landed on **{result}**\n\n"
                 f"{outcome}"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(
@@ -944,7 +945,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 description=(
                     "Pick a number between **1 and 6**."
                 ),
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -958,7 +959,7 @@ class Economy(commands.GroupCog, group_name="economy"):
             embed = discord.Embed(
                 title="❌ Invalid Bet",
                 description="Invalid or insufficient balance.",
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -997,7 +998,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 f"Rolled: **{roll}**\n\n"
                 f"{outcome}"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(
@@ -1027,7 +1028,7 @@ class Economy(commands.GroupCog, group_name="economy"):
             embed = discord.Embed(
                 title="❌ Invalid Bet",
                 description="Invalid or insufficient balance.",
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -1096,7 +1097,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 f"{result[2]}\n\n"
                 f"{outcome}"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(
@@ -1125,7 +1126,7 @@ class Economy(commands.GroupCog, group_name="economy"):
             embed = discord.Embed(
                 title="🏆 Leaderboard",
                 description="No data yet.",
-                color=discord.Color.blurple()
+                color=SUCCESS_COLOUR
             )
 
             await interaction.response.send_message(
@@ -1190,7 +1191,7 @@ class Economy(commands.GroupCog, group_name="economy"):
             embed = discord.Embed(
                 title="🏆 Leaderboard",
                 description=description or "No data.",
-                color=discord.Color.blurple()
+                color=SUCCESS_COLOUR
             )
 
             max_page = (
@@ -1241,7 +1242,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                     embed=discord.Embed(
                         title="❌ Error",
                         description="Not your leaderboard.",
-                        color=discord.Color.red()
+                        color=BAD_COLOUR
                     ),
                     ephemeral=True
                 )
@@ -1264,7 +1265,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                     embed=discord.Embed(
                         title="❌ Error",
                         description="Not your leaderboard.",
-                        color=discord.Color.red()
+                        color=BAD_COLOUR
                     ),
                     ephemeral=True
                 )
@@ -1309,7 +1310,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 description=(
                     "You can’t gift money to yourself."
                 ),
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -1325,7 +1326,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 description=(
                     "Amount must be greater than 0."
                 ),
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -1355,7 +1356,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 description=(
                     "You don’t have enough coins."
                 ),
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -1379,7 +1380,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 f"💸 Your new balance: "
                 f"**{sender['balance']}**"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(
@@ -1438,7 +1439,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                     description=(
                         "Bet must be higher than 0."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -1451,7 +1452,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                         "You don’t have enough money "
                         "for that bet."
                     ),
-                    color=discord.Color.red()
+                    color=BAD_COLOUR
                 ),
                 ephemeral=True
             )
@@ -1500,7 +1501,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 f"**{bot_choice}**\n\n"
                 f"{outcome}"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(
@@ -1544,7 +1545,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                     f"You can fish again in "
                     f"**{self.format_time(remaining)}**"
                 ),
-                color=discord.Color.red()
+                color=BAD_COLOUR
             )
 
             await interaction.response.send_message(
@@ -1594,7 +1595,7 @@ class Economy(commands.GroupCog, group_name="economy"):
                 f"You caught a {caught_fish} "
                 f"and earned **{reward} coins!**"
             ),
-            color=discord.Color.blurple()
+            color=SUCCESS_COLOUR
         )
 
         await interaction.response.send_message(
