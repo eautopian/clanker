@@ -8,6 +8,8 @@
 
 # eautopian was here from the pixel development computer
 
+# eautopian is poopy <3
+
 import discord
 from discord.ext import commands, tasks
 import asyncio
