@@ -23,7 +23,8 @@
 - add error messages for `/caption`
 - make `/caption` work with gifs
 
-## Branding
-- make the bot automatically change it's pfp and banner, and embed colours and stuff when it comes around to holidays like halloween, christmas etc.
+## System Stuff
+
+- make clanker user installable
 
 -# This message is updated automatically.
