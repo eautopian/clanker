@@ -12,7 +12,7 @@ import shutil
 import tempfile
 import asyncio
 import random
-from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
 
 class Video(commands.GroupCog, group_name="video"):
     video_1 = app_commands.Group(

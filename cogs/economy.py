@@ -7,7 +7,7 @@ import json
 import random
 import time
 import sqlite3
-from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
 
 DB_PATH = "economy.db"
 

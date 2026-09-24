@@ -6,25 +6,21 @@ import discord
 import json
 import math
 import time
-from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
+import configparser
+from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
 
-def owner_check():
-    async def predicate(interaction: Interaction):
-        return interaction.user.id in interaction.client.data.get("owners", [])
+ini = configparser.ConfigParser()
+ini.read("config.ini")
 
-    return app_commands.check(predicate)
+OWNERID = int(ini["DEFAULT"]["owner"])
 
-def admin_check():
-    async def predicate(interaction: Interaction):
-        return (
-            interaction.user.id in interaction.client.data.get("admins", [])
-            or interaction.user.id in interaction.client.data.get("owners", [])
-        )
-
+def owner_check(): 
+    async def predicate(interaction: Interaction): 
+        return interaction.user.id == OWNERID
+    
     return app_commands.check(predicate)
 
 class Admin(commands.GroupCog, group_name="admin"):
-
     def __init__(self, bot):
         self.bot = bot
 
@@ -203,6 +199,7 @@ class Admin(commands.GroupCog, group_name="admin"):
         name="license",
         description="(OWNER) send license troll message"
     )
+    @owner_check()
     async def license(
         self,
         interaction: Interaction,
@@ -428,7 +425,7 @@ class Admin(commands.GroupCog, group_name="admin"):
         name="servers",
         description="(OWNER/ADMIN) list all bot servers"
     )
-    @admin_check()
+    @owner_check()
     async def servers(
         self,
         interaction: Interaction
@@ -521,7 +518,7 @@ class Admin(commands.GroupCog, group_name="admin"):
         name="ccu",
         description="(OWNER/ADMIN) View current CCU"
     )
-    @admin_check()
+    @owner_check()
     async def ccu(
         self,
         interaction: Interaction

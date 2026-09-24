@@ -10,7 +10,7 @@ import os
 import tempfile
 import shutil
 import random
-from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
 
 class Images(commands.GroupCog, group_name="image"):
     image_1 = app_commands.Group(

@@ -20,7 +20,7 @@ import topgg
 import aiohttp
 import itertools
 import configparser
-from cogs.config import SUCCESS_COLOUR
+from cogs.theming import SUCCESS_COLOUR
 
 ini = configparser.ConfigParser()
 

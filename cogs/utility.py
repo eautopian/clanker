@@ -15,7 +15,7 @@ import urllib.parse
 import socket
 import whois
 from mathparse import mathparse
-from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
 
 class Utility(commands.GroupCog, group_name="utility"):
     def __init__(self, bot):

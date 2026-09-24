@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 import aiohttp
 from io import BytesIO
 from urllib.parse import urlencode
-from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
 
 click_count = 0
 
@@ -33,7 +33,6 @@ class ClickerView(discord.ui.View):
         self.click_button.label = f"🖱️ Clicks: {click_count}"
 
         await interaction.response.edit_message(view=self)
-
 
 class Social(commands.GroupCog, group_name="social"):
     def __init__(self, bot):

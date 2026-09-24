@@ -2,7 +2,7 @@ import asyncio
 import random
 import discord
 from discord.ext import commands
-from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
 
 class PromoPatch(commands.Cog):
     def __init__(self, bot):

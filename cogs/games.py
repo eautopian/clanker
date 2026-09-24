@@ -3,7 +3,7 @@ import discord
 import random
 from discord import app_commands, Interaction
 from discord.ext import commands
-from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
 
 class WordleView(discord.ui.View):
     def __init__(self, user_id, word, valid_words):

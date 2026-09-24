@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 import random
 import discord
 import json
-from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
 
 class WelcomeView(discord.ui.View):
     def __init__(self):

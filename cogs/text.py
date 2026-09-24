@@ -4,7 +4,7 @@ from discord import app_commands, Interaction, User, TextChannel
 from discord.ext import commands
 import discord
 import random
-from cogs.config import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
 
 def uwuify(text: str) -> str:
     faces = ["(・`ω´・)", "uwu", "owo", ">w<", "^w^"]
