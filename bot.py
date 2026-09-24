@@ -509,10 +509,8 @@ class Clanker(commands.AutoShardedBot):
     async def before_api_stats_loop(self):
         await self.wait_until_ready()
 
-
 bot = Clanker()
 bot.data = data
-
 
 def extract_interaction_options(options):
     values = []
@@ -530,7 +528,6 @@ def extract_interaction_options(options):
 
     return values
 
-
 @bot.event
 async def on_ready():
     print(
@@ -540,7 +537,6 @@ async def on_ready():
     print(
         "Clanker is alive 😎"
     )
-
 
 @bot.event
 async def on_interaction(
@@ -588,7 +584,6 @@ async def on_interaction(
         f"{cmd}"
         f"{' ' + args if args else ''}"
     )
-
 
 class WelcomeView(discord.ui.View):
     def __init__(self):
@@ -746,7 +741,6 @@ async def on_guild_join(guild: discord.Guild):
         f"[WELCOME] Could not find a channel to send in "
         f"{guild.name} ({guild.id})"
     )
-
 
 async def main():
     async with bot:
