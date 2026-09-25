@@ -16,6 +16,7 @@ https://discord.gg/YtQdrkxfg7
 
 Make a file named "config.ini" with the following
 ```ini
+[DEFAULT]
 TOKEN=INSERT_BOT_TOKEN
 TEST_GUILD_ID=INSERT_YOUR_GUILD_ID
 TOPGG_TOKEN=not_valid_dont_worry_about_this_its_just_needed
