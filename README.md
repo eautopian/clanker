@@ -1,5 +1,7 @@
 # 🤖 Clanker
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T5G225D731)
+
 A fun, feature-packed Discord entertainment bot.
 
 🌐 Website: https://clanker.pxsl.dev/
