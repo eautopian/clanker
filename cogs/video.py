@@ -12,7 +12,7 @@ import shutil
 import tempfile
 import asyncio
 import random
-from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import get_fail_colour, get_success_colour
 
 class Video(commands.GroupCog, group_name="video"):
     video_1 = app_commands.Group(
@@ -57,7 +57,7 @@ class Video(commands.GroupCog, group_name="video"):
                         "Sorry, Clanker can only be installed in a server.\n\n"
                         "Please add Clanker to a server before using these commands."
                     ),
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -75,7 +75,7 @@ class Video(commands.GroupCog, group_name="video"):
                         "Clanker isn't installed in this server.\n\n"
                         "Please add Clanker to this server before using these commands."
                     ),
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -88,7 +88,7 @@ class Video(commands.GroupCog, group_name="video"):
                         "I couldn't verify whether Clanker is installed "
                         "in this server."
                     ),
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -101,7 +101,7 @@ class Video(commands.GroupCog, group_name="video"):
                         "Discord didn't let me verify whether Clanker "
                         "is installed in this server. Please try again."
                     ),
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -118,7 +118,7 @@ class Video(commands.GroupCog, group_name="video"):
         embed = discord.Embed(
             title=title,
             description=desc,
-            color=BAD_COLOUR
+            color=get_fail_colour()
         )
 
         if interaction.response.is_done():
@@ -670,7 +670,7 @@ class Video(commands.GroupCog, group_name="video"):
             embed = discord.Embed(
                 title=title,
                 description=description if description else "",
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
             await interaction.followup.send(
@@ -1124,7 +1124,7 @@ class Video(commands.GroupCog, group_name="video"):
                     "Converted successfully.\n"
                     "Animated GIFs are limited to 256 colours."
                 ),
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
             embed.set_image(
@@ -1397,7 +1397,7 @@ class Video(commands.GroupCog, group_name="video"):
 
             embed = discord.Embed(
                 title="Caption 📝",
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
             await interaction.followup.send(
@@ -1531,7 +1531,7 @@ class Video(commands.GroupCog, group_name="video"):
                     f"Successfully extracted "
                     f"**{len(frame_files)} frames**!"
                 ),
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
             if len(frame_files) >= self.MAX_FRAMES:
@@ -1710,7 +1710,7 @@ class Video(commands.GroupCog, group_name="video"):
                     f"Created a boomerang with "
                     f"**{len(boomerang_frames)} frames**!"
                 ),
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
             if len(frames) >= self.MAX_BOOMERANG_FRAMES:

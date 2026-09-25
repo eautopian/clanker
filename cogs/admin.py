@@ -7,7 +7,7 @@ import json
 import math
 import time
 import configparser
-from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import get_fail_colour, get_success_colour
 
 ini = configparser.ConfigParser()
 ini.read("config.ini")
@@ -33,7 +33,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                         "Sorry, Clanker can only be installed in a server.\n\n"
                         "Please add Clanker to a server before using these commands."
                     ),
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -50,7 +50,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                         "Clanker isn't installed in this server.\n\n"
                         "Please add Clanker to this server before using these commands."
                     ),
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -64,7 +64,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                         "I couldn't verify whether Clanker is installed "
                         "in this server."
                     ),
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -78,7 +78,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                         "Discord didn't let me verify whether Clanker "
                         "is installed in this server. Please try again."
                     ),
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -114,7 +114,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                 embed=discord.Embed(
                     title="❌ Already Admin",
                     description=f"{user.mention} is already an admin.",
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -126,7 +126,7 @@ class Admin(commands.GroupCog, group_name="admin"):
             embed=discord.Embed(
                 title="✅ Admin Added",
                 description=f"{user.mention} is now an admin.",
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             ),
             ephemeral=True
         )
@@ -146,7 +146,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                 embed=discord.Embed(
                     title="❌ Not Admin",
                     description=f"{user.mention} is not an admin.",
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -158,7 +158,7 @@ class Admin(commands.GroupCog, group_name="admin"):
             embed=discord.Embed(
                 title="🗑️ Admin Removed",
                 description=f"{user.mention} is no longer an admin.",
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             ),
             ephemeral=True
         )
@@ -179,7 +179,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                 embed=discord.Embed(
                     title="👮 Admin List",
                     description="No admins are currently set.",
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -190,7 +190,7 @@ class Admin(commands.GroupCog, group_name="admin"):
             embed=discord.Embed(
                 title="👮 Admin List",
                 description="\n".join(mentions),
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             ),
             ephemeral=True
         )
@@ -213,7 +213,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                 embed=discord.Embed(
                     title="❌ No Permission",
                     description="You are not allowed to use this command.",
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -237,7 +237,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                     embed=discord.Embed(
                         title="😂 Trolled",
                         description="haha lol trolled by the bot admins imagine",
-                        color=SUCCESS_COLOUR
+                        color=get_success_colour()
                     ),
                     ephemeral=True
                 )
@@ -247,7 +247,7 @@ class Admin(commands.GroupCog, group_name="admin"):
         embed = discord.Embed(
             title="⚠️ License Expired",
             description="Your license is outdated.\nClick below to renew it.",
-            color=BAD_COLOUR
+            color=get_fail_colour()
         )
 
         try:
@@ -260,7 +260,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                 embed=discord.Embed(
                     title="📩 License Sent",
                     description=f"Sent to {channel.mention}",
-                    color=SUCCESS_COLOUR
+                    color=get_success_colour()
                 ),
                 ephemeral=True
             )
@@ -270,7 +270,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                 embed=discord.Embed(
                     title="❌ Missing Permissions",
                     description="I can't send messages in that channel.",
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -291,7 +291,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                 embed=discord.Embed(
                     title="❌ Invalid Amount",
                     description="Amount must be greater than 0.",
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -303,7 +303,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                 embed=discord.Embed(
                     title="❌ Error",
                     description="Economy cog not loaded.",
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -322,7 +322,7 @@ class Admin(commands.GroupCog, group_name="admin"):
             embed=discord.Embed(
                 title="💰 Money Given",
                 description=f"Gave **{amount} coins** to {user.mention}",
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             ),
             ephemeral=True
         )
@@ -343,7 +343,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                 embed=discord.Embed(
                     title="❌ Invalid Amount",
                     description="Amount must be greater than 0.",
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -355,7 +355,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                 embed=discord.Embed(
                     title="❌ Error",
                     description="Economy cog not loaded.",
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -376,7 +376,7 @@ class Admin(commands.GroupCog, group_name="admin"):
             embed=discord.Embed(
                 title="💸 Money Removed",
                 description=f"Removed **{removed} coins** from {user.mention}",
-                color=BAD_COLOUR
+                color=get_fail_colour()
             ),
             ephemeral=True
         )
@@ -397,7 +397,7 @@ class Admin(commands.GroupCog, group_name="admin"):
             embed = discord.Embed(
                 title=title,
                 description=message,
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
             await user.send(embed=embed)
@@ -406,7 +406,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                 embed=discord.Embed(
                     title="📩 DM Sent",
                     description=f"Sent to {user.mention}",
-                    color=SUCCESS_COLOUR
+                    color=get_success_colour()
                 ),
                 ephemeral=True
             )
@@ -416,7 +416,7 @@ class Admin(commands.GroupCog, group_name="admin"):
                 embed=discord.Embed(
                     title="❌ DM Failed",
                     description="User has DMs disabled.",
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -457,7 +457,7 @@ class Admin(commands.GroupCog, group_name="admin"):
             embed = discord.Embed(
                 title=f"🗂️ Server List ({page + 1}/{pages})",
                 description=desc or "No servers found.",
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
             embed.set_footer(
@@ -536,7 +536,7 @@ class Admin(commands.GroupCog, group_name="admin"):
 
         embed = discord.Embed(
             title="📊 Current CCU",
-            colour=SUCCESS_COLOUR
+            colour=get_success_colour()
         )
 
         embed.add_field(
