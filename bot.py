@@ -20,7 +20,7 @@ import topgg
 import aiohttp
 import itertools
 import configparser
-from cogs.theming import SUCCESS_COLOUR
+from cogs.theming import get_success_colour
 
 ini = configparser.ConfigParser()
 
@@ -633,7 +633,7 @@ async def on_guild_join(guild: discord.Guild):
 
             "**Thanks for choosing Clanker! 🔧**"
         ),
-        colour=SUCCESS_COLOUR
+        colour=get_success_colour()
     )
 
     embed.set_footer(

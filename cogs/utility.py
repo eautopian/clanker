@@ -15,7 +15,7 @@ import urllib.parse
 import socket
 import whois
 from mathparse import mathparse
-from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import get_fail_colour, get_success_colour
 
 class Utility(commands.GroupCog, group_name="utility"):
     def __init__(self, bot):
@@ -30,7 +30,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                         "Sorry, Clanker can only be installed in a server.\n\n"
                         "Please add Clanker to a server before using these commands."
                     ),
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -47,7 +47,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                         "Clanker isn't installed in this server.\n\n"
                         "Please add Clanker to this server before using these commands."
                     ),
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -61,7 +61,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                         "I couldn't verify whether Clanker is installed "
                         "in this server."
                     ),
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -75,7 +75,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                         "Discord didn't let me verify whether Clanker "
                         "is installed in this server. Please try again."
                     ),
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -127,7 +127,7 @@ class Utility(commands.GroupCog, group_name="utility"):
         embed = discord.Embed(
             title="Dad Joke 😂",
             description=data["joke"],
-            color=SUCCESS_COLOUR
+            color=get_success_colour()
         )
 
         await interaction.response.send_message(embed=embed)
@@ -148,7 +148,7 @@ class Utility(commands.GroupCog, group_name="utility"):
 
         embed = discord.Embed(
             title="Random Dog 🐶",
-            color=SUCCESS_COLOUR
+            color=get_success_colour()
         )
 
         embed.set_image(url=data["message"])
@@ -171,7 +171,7 @@ class Utility(commands.GroupCog, group_name="utility"):
 
         embed = discord.Embed(
             title="🐱 Random Cat",
-            color=SUCCESS_COLOUR
+            color=get_success_colour()
         )
 
         embed.set_image(url=data[0]["url"])
@@ -194,7 +194,7 @@ class Utility(commands.GroupCog, group_name="utility"):
 
         embed = discord.Embed(
             title="🦆 Random Duck",
-            color=SUCCESS_COLOUR
+            color=get_success_colour()
         )
 
         embed.set_image(url=data["url"])
@@ -241,7 +241,7 @@ class Utility(commands.GroupCog, group_name="utility"):
 
         embed = discord.Embed(
             title="Random Oliver Image 🐱",
-            color=SUCCESS_COLOUR
+            color=get_success_colour()
         )
 
         embed.set_image(url=final_url)
@@ -267,7 +267,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                     "Password length must be between "
                     "4 and 100 characters."
                 ),
-                color=BAD_COLOUR
+                color=get_fail_colour()
             )
 
             return await interaction.response.send_message(
@@ -290,7 +290,7 @@ class Utility(commands.GroupCog, group_name="utility"):
         embed = discord.Embed(
             title="🔐 Generated Password",
             description=f"```\n{password}\n```",
-            color=SUCCESS_COLOUR
+            color=get_success_colour()
         )
 
         await interaction.response.send_message(
@@ -319,7 +319,7 @@ class Utility(commands.GroupCog, group_name="utility"):
         embed = discord.Embed(
             title="📱 QR Code",
             description=f"QR code for: `{url}`",
-            color=SUCCESS_COLOUR
+            color=get_success_colour()
         )
 
         file = discord.File(
@@ -367,7 +367,7 @@ class Utility(commands.GroupCog, group_name="utility"):
         embed = discord.Embed(
             title="⏰ Reminder Set!",
             description=message,
-            color=SUCCESS_COLOUR
+            color=get_success_colour()
         )
 
         await interaction.response.send_message(
@@ -380,7 +380,7 @@ class Utility(commands.GroupCog, group_name="utility"):
         embed = discord.Embed(
             title="⏰ Reminder",
             description=message,
-            color=SUCCESS_COLOUR
+            color=get_success_colour()
         )
 
         try:
@@ -421,7 +421,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                     embed=discord.Embed(
                         title="Nothing to delete",
                         description="You have no stored Clanker data.",
-                        color=SUCCESS_COLOUR
+                        color=get_success_colour()
                     ),
                     ephemeral=True
                 )
@@ -456,7 +456,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                     "Your Clanker data has been exported and deleted.\n"
                     "You are gone from the system."
                 ),
-                color=BAD_COLOUR
+                color=get_fail_colour()
             )
 
             await interaction.followup.send(
@@ -475,7 +475,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                         "Something went wrong while "
                         "deleting your data."
                     ),
-                    color=BAD_COLOUR
+                    color=get_fail_colour()
                 ),
                 ephemeral=True
             )
@@ -512,7 +512,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                                 "Steam failed to return search results.\n\n"
                                 "Please try again later."
                             ),
-                            color=BAD_COLOUR
+                            color=get_fail_colour()
                         )
 
                         return await interaction.followup.send(
@@ -531,7 +531,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                             f"I couldn't find a Steam game matching "
                             f"`{game}`."
                         ),
-                        color=BAD_COLOUR
+                        color=get_fail_colour()
                     )
 
                     return await interaction.followup.send(
@@ -580,7 +580,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                             f"I couldn't find an exact Steam game "
                             f"called `{game}`."
                         ),
-                        color=BAD_COLOUR
+                        color=get_fail_colour()
                     )
 
                     return await interaction.followup.send(
@@ -606,7 +606,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                                 "Steam found the game, but I couldn't "
                                 "retrieve its information."
                             ),
-                            color=BAD_COLOUR
+                            color=get_fail_colour()
                         )
 
                         return await interaction.followup.send(
@@ -628,7 +628,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                             "Steam found the game, but its information "
                             "is currently unavailable."
                         ),
-                        color=BAD_COLOUR
+                        color=get_fail_colour()
                     )
 
                     return await interaction.followup.send(
@@ -645,7 +645,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                         "No description available."
                     ),
                     url=f"https://store.steampowered.com/app/{app_id}",
-                    color=SUCCESS_COLOUR
+                    color=get_success_colour()
                 )
 
                 if game_data.get("header_image"):
@@ -729,7 +729,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                     "I couldn't connect to Steam.\n\n"
                     "Please try again later."
                 ),
-                color=BAD_COLOUR
+                color=get_fail_colour()
             )
 
             await interaction.followup.send(
@@ -746,7 +746,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                     "Something went wrong while getting "
                     "the Steam game information."
                 ),
-                color=BAD_COLOUR
+                color=get_fail_colour()
             )
 
             await interaction.followup.send(
@@ -789,7 +789,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                 title=f"GitHub - {profile['name']}",
                 url=profile["url"],
                 description=profile["bio"],
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
             embed.set_thumbnail(url=profile["avatar"])
@@ -885,7 +885,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                 title=f"{movie['title']} ({movie['year']})",
                 url=movie["imdburl"],
                 description=movie["plot"],
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
             if movie.get("poster") and movie["poster"] != "N/A":
@@ -1026,7 +1026,7 @@ class Utility(commands.GroupCog, group_name="utility"):
             embed = discord.Embed(
                 title=song["name"],
                 url=song["url"],
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
             embed.set_author(
@@ -1120,7 +1120,7 @@ class Utility(commands.GroupCog, group_name="utility"):
             embed = discord.Embed(
                 title=package["name"],
                 description=package["description"],
-                color=BAD_COLOUR
+                color=get_fail_colour()
             )
 
             embed.add_field(
@@ -1224,7 +1224,7 @@ class Utility(commands.GroupCog, group_name="utility"):
             embed = discord.Embed(
                 title=f"Weather for {location['name']}",
                 description=f"**{current['skytext']}**",
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
             if current.get("imageUrl"):
@@ -1316,7 +1316,7 @@ class Utility(commands.GroupCog, group_name="utility"):
 
             embed = discord.Embed(
                 title="Translation",
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
             embed.add_field(name=f"Original ({detected})", value=text[:1000], inline=False)
             embed.add_field(name=f"Translated ({target})", value=translated[:1000], inline=False)
@@ -1355,7 +1355,7 @@ class Utility(commands.GroupCog, group_name="utility"):
             embed = discord.Embed(
                 title=f"📖 {top.get('word', term)}",
                 description=definition,
-                color=SUCCESS_COLOUR,
+                color=get_success_colour(),
                 url=permalink
             )
             if example:
@@ -1392,7 +1392,7 @@ class Utility(commands.GroupCog, group_name="utility"):
             embed = discord.Embed(
                 title=f"📖 {word_title}",
                 description=f"*{phonetic}*" if phonetic else "",
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
             for meaning in entry.get("meanings", [])[:3]:
@@ -1425,7 +1425,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                 await interaction.followup.send(embed=self.embed("Error", f"Could not look up `{ip}`", True))
                 return
 
-            embed = discord.Embed(title=f"IP: {ip}", color=SUCCESS_COLOUR)
+            embed = discord.Embed(title=f"IP: {ip}", color=get_success_colour())
             embed.add_field(name="Country", value=data.get("country", "?"), inline=True)
             embed.add_field(name="Region", value=data.get("regionName", "?"), inline=True)
             embed.add_field(name="City", value=data.get("city", "?"), inline=True)
@@ -1476,7 +1476,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                 await interaction.followup.send(embed=self.embed("Error", f"No DNS records found for `{domain}`", True))
                 return
 
-            embed = discord.Embed(title=f"DNS: {domain}", color=SUCCESS_COLOUR)
+            embed = discord.Embed(title=f"DNS: {domain}", color=get_success_colour())
             for rtype, values in results.items():
                 embed.add_field(name=rtype, value="\n".join(values[:5]), inline=False)
 
@@ -1497,7 +1497,7 @@ class Utility(commands.GroupCog, group_name="utility"):
 
             embed = discord.Embed(
                 title=f"WHOIS: {domain}",
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
             def format_value(value):
@@ -1628,7 +1628,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                 description=(
                     result_str
                 ),
-                color=SUCCESS_COLOUR
+                color=get_success_colour()
             )
 
         return await interaction.response.send_message(

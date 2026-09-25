@@ -2,8 +2,66 @@ import discord
 import datetime
 from discord.ext import commands, tasks
 
-SUCCESS_COLOUR = discord.Color.blurple()
-BAD_COLOUR = discord.Color.red()
+THEMES = {
+    "halloween": {
+        "success": discord.Color.orange(),
+        "fail": discord.Color.purple(),
+        "avatar": "assets/halloween/avatar.png",
+        "banner": "assets/halloween/banner.png",
+    },
+    "fools": {
+        "success": discord.Color.yellow(),
+        "fail": discord.Color.magenta(),
+        "avatar": "assets/fools/avatar.png",
+        "banner": "assets/fools/banner.png",
+    },
+    "christmas": {
+        "success": discord.Color.green(),
+        "fail": discord.Color.red(),
+        "avatar": "assets/christmas/avatar.png",
+        "banner": "assets/christmas/banner.png",
+    },
+    "easter": {
+        "success": discord.Color.green(),
+        "fail": discord.Color.pink(),
+        "avatar": "assets/easter/avatar.png",
+        "banner": "assets/easter/banner.png",
+    },
+    "default": {
+        "success": discord.Color.blurple(),
+        "fail": discord.Color.red(),
+        "avatar": "assets/default/avatar.png",
+        "banner": "assets/default/banner.png",
+    },
+}
+
+def get_theme():
+    now = datetime.datetime.now(datetime.timezone.utc)
+
+    if now.month == 4 and now.day == 1:
+        return "fools"
+    elif now.month == 10:
+        return "halloween"
+    elif now.month == 12:
+        return "christmas"
+    elif now.month == 3:
+        return "easter"
+
+    return "default"
+
+cached_theme = get_theme()
+
+def get_success_colour():
+    return THEMES[cached_theme]["success"]
+
+def get_fail_colour():
+    return THEMES[cached_theme]["fail"]
+
+def get_avatar():
+    return THEMES[cached_theme]["avatar"]
+
+def get_banner():
+    return THEMES[cached_theme]["banner"]
 
 class Theming(commands.Cog):
     def __init__(self, bot):
@@ -15,54 +73,25 @@ class Theming(commands.Cog):
         self.update_theme.cancel()
 
     async def apply_theme(self):
-        global SUCCESS_COLOUR, BAD_COLOUR
-
         now = datetime.datetime.now(datetime.timezone.utc)
         date = now.date()
-        month = now.month
-        day = now.day
-
-        if month == 4 and day == 1:
-            SUCCESS_COLOUR = discord.Color.yellow()
-            BAD_COLOUR = discord.Color.magenta()
-            avatar_file = "assets/fools/avatar.png"
-            banner_file = "assets/fools/banner.png"
-
-        # elif month == 10:
-        #     SUCCESS_COLOUR = discord.Color.orange()
-        #     BAD_COLOUR = discord.Color.purple()
-        #     avatar_file = "assets/halloween/avatar.png"
-        #     banner_file = "assets/halloween/banner.png"
-
-        # elif month == 12:
-        #     SUCCESS_COLOUR = discord.Color.green()
-        #     BAD_COLOUR = discord.Color.red()
-        #     avatar_file = "assets/christmas/avatar.png"
-        #     banner_file = "assets/christmas/banner.png"
-
-        # elif month == 3:
-        #     SUCCESS_COLOUR = discord.Color.green()
-        #     BAD_COLOUR = discord.Color.pink()
-        #     avatar_file = "assets/easter/avatar.png"
-        #     banner_file = "assets/easter/banner.png"
-
-        else:
-            SUCCESS_COLOUR = discord.Color.blurple()
-            BAD_COLOUR = discord.Color.red()
-            avatar_file = "assets/default/avatar.png"
-            banner_file = "assets/default/banner.png"
-
         if self.current_date == date:
             return
 
+        global cached_theme
+        cached_theme = get_theme()
+
         self.current_date = date
+
+        avatar_file = get_avatar()
+        banner_file = get_banner()
 
         with open(avatar_file, "rb") as f:
             avatar = f.read()
 
         with open(banner_file, "rb") as f:
             banner = f.read()
-
+    
         await self.bot.user.edit(avatar=avatar, banner=banner)
 
     @tasks.loop(time=datetime.time(hour=0, minute=0, second=0, tzinfo=datetime.timezone.utc))

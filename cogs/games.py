@@ -3,7 +3,7 @@ import discord
 import random
 from discord import app_commands, Interaction
 from discord.ext import commands
-from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import get_fail_colour, get_success_colour
 
 class WordleView(discord.ui.View):
     def __init__(self, user_id, word, valid_words):
@@ -36,7 +36,7 @@ class WordleView(discord.ui.View):
             embed = discord.Embed(
                 title="That's not your Wordle! ❌",
                 description="You can't interact with someone else's game.",
-                color=BAD_COLOUR
+                color=get_fail_colour()
             )
             await interaction.response.send_message(
                 embed=embed,
@@ -89,7 +89,7 @@ class WordleView(discord.ui.View):
             embed = discord.Embed(
                 title="Wordle has ended! ❌",
                 description="This game is already finished.",
-                color=BAD_COLOUR
+                color=get_fail_colour()
             )
             await interaction.response.send_message(
                 embed=embed,
@@ -104,7 +104,7 @@ class WordleView(discord.ui.View):
             embed = discord.Embed(
                 title="Wordle has ended! ❌",
                 description="This game is already finished.",
-                color=BAD_COLOUR
+                color=get_fail_colour()
             )
             await interaction.response.send_message(
                 embed=embed,
@@ -123,7 +123,7 @@ class WordleView(discord.ui.View):
             f"The word was **{self.word}**.\n"
             f"Better luck next time!"
         )
-        embed.color = BAD_COLOUR
+        embed.color = get_fail_colour()
         embed.set_footer(text="Game ended by you.")
 
         await interaction.response.edit_message(
@@ -154,7 +154,7 @@ class WordleModal(discord.ui.Modal, title="Make a guess"):
             embed = discord.Embed(
                 title="Wordle has ended! ❌",
                 description="This game is already finished.",
-                color=BAD_COLOUR
+                color=get_fail_colour()
             )
             await interaction.response.send_message(
                 embed=embed,
@@ -168,7 +168,7 @@ class WordleModal(discord.ui.Modal, title="Make a guess"):
             embed = discord.Embed(
                 title="Invalid guess ❌",
                 description="Your guess must contain exactly **5 letters**.",
-                color=BAD_COLOUR
+                color=get_fail_colour()
             )
             await interaction.response.send_message(
                 embed=embed,
@@ -180,7 +180,7 @@ class WordleModal(discord.ui.Modal, title="Make a guess"):
             embed = discord.Embed(
                 title="Not a valid word ❌",
                 description=f"**{guess}** isn't in the Wordle word list.",
-                color=BAD_COLOUR
+                color=get_fail_colour()
             )
             await interaction.response.send_message(
                 embed=embed,
@@ -203,7 +203,7 @@ class WordleModal(discord.ui.Modal, title="Make a guess"):
                 f"You guessed the correct word **{self.game.word}** "
                 f"in **{attempts} attempt{'s' if attempts != 1 else ''}!**"
             )
-            embed.color = SUCCESS_COLOUR
+            embed.color = get_success_colour()
             embed.set_footer(text="Congratulations! 🎉")
 
             await interaction.response.edit_message(
@@ -224,7 +224,7 @@ class WordleModal(discord.ui.Modal, title="Make a guess"):
                 f"The word was **{self.game.word}**.\n"
                 f"Better luck next time!"
             )
-            embed.color = BAD_COLOUR
+            embed.color = get_fail_colour()
             embed.set_footer(text="Maybe you'll get it next time!")
 
             await interaction.response.edit_message(
@@ -286,7 +286,7 @@ class Games(commands.GroupCog, group_name="games"):
                     "I couldn't retrieve the Wordle word list right now.\n"
                     "Please try again in a moment."
                 ),
-                color=BAD_COLOUR
+                color=get_fail_colour()
             )
             await interaction.response.send_message(embed=embed)
             return

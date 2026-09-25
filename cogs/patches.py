@@ -2,7 +2,7 @@ import asyncio
 import random
 import discord
 from discord.ext import commands
-from cogs.theming import BAD_COLOUR, SUCCESS_COLOUR
+from cogs.theming import get_fail_colour, get_success_colour
 
 class PromoPatch(commands.Cog):
     def __init__(self, bot):
@@ -52,7 +52,7 @@ class PromoPatch(commands.Cog):
                 "[🌐 Visit the Website](https://clanker.pxsl.dev/)\n"
                 "[💜 Support Us](https://pxsl.dev/thanks/)"
             ),
-            color=SUCCESS_COLOUR
+            color=get_success_colour()
         )
 
         embed.set_footer(text="Automated Message • Deleting soon • You won't see this again for a while.")
