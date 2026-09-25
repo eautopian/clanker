@@ -51,7 +51,6 @@ cooldowns = {}
 intents = discord.Intents.default()
 intents.guilds = True
 
-
 class Clanker(commands.AutoShardedBot):
     def __init__(self):
         super().__init__(
