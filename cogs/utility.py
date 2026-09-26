@@ -1,6 +1,6 @@
 # im a utilitlituy file!
 
-from discord import app_commands, Interaction, User, TextChannel
+from discord import app_commands, Interaction
 from discord.ext import commands
 import discord
 import aiohttp
@@ -10,7 +10,6 @@ import io
 import asyncio
 import re
 import json
-import discord
 import urllib.parse
 import socket
 import whois
@@ -20,68 +19,6 @@ from cogs.theming import get_fail_colour, get_success_colour
 class Utility(commands.GroupCog, group_name="utility"):
     def __init__(self, bot):
         self.bot = bot
-
-    async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        if interaction.guild is None:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Server Installation Required",
-                    description=(
-                        "Sorry, Clanker can only be installed in a server.\n\n"
-                        "Please add Clanker to a server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        try:
-            await interaction.guild.fetch_member(self.bot.user.id)
-
-        except discord.NotFound:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Clanker Isn't Installed",
-                    description=(
-                        "Clanker isn't installed in this server.\n\n"
-                        "Please add Clanker to this server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        except discord.Forbidden:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Unable to Check",
-                    description=(
-                        "I couldn't verify whether Clanker is installed "
-                        "in this server."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        except discord.HTTPException:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Discord Error",
-                    description=(
-                        "Discord didn't let me verify whether Clanker "
-                        "is installed in this server. Please try again."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        return True
 
     def parse_time(self, time_str: str) -> int:
         matches = re.findall(r"(\d+)([smhdw])", time_str.lower())
@@ -103,7 +40,7 @@ class Utility(commands.GroupCog, group_name="utility"):
             total_seconds += int(value) * multipliers[unit]
 
         return total_seconds if total_seconds > 0 else -1
-    
+
     group_1 = app_commands.Group(
         name="1",
         description="Utility - page 1"
@@ -113,10 +50,16 @@ class Utility(commands.GroupCog, group_name="utility"):
         name="dadjoke",
         description="random dad joke very funny haha"
     )
-    async def dadjoke(
-        self,
-        interaction: Interaction
-    ):
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def dadjoke(self, interaction: Interaction):
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 "https://icanhazdadjoke.com/",
@@ -136,10 +79,16 @@ class Utility(commands.GroupCog, group_name="utility"):
         name="dog",
         description="i like dog"
     )
-    async def dog(
-        self,
-        interaction: Interaction
-    ):
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def dog(self, interaction: Interaction):
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 "https://dog.ceo/api/breeds/image/random"
@@ -159,10 +108,16 @@ class Utility(commands.GroupCog, group_name="utility"):
         name="cat",
         description="i like cat"
     )
-    async def cat(
-        self,
-        interaction: Interaction
-    ):
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def cat(self, interaction: Interaction):
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 "https://api.thecatapi.com/v1/images/search"
@@ -182,10 +137,16 @@ class Utility(commands.GroupCog, group_name="utility"):
         name="duck",
         description="i like duck"
     )
-    async def duck(
-        self,
-        interaction: Interaction
-    ):
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def duck(self, interaction: Interaction):
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 "https://random-d.uk/api/v2/random"
@@ -205,10 +166,16 @@ class Utility(commands.GroupCog, group_name="utility"):
         name="oliver",
         description="get a random picture of dashcrikeydash's cat"
     )
-    async def oliver(
-        self,
-        interaction: Interaction
-    ):
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def oliver(self, interaction: Interaction):
         json_url = "https://dashcrikeydash.github.io/images.json"
         base_url = "https://dashcrikeydash.github.io/"
 
@@ -254,6 +221,15 @@ class Utility(commands.GroupCog, group_name="utility"):
     )
     @app_commands.describe(
         length="Length of the password (4-100)"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def password(
         self,
@@ -305,14 +281,23 @@ class Utility(commands.GroupCog, group_name="utility"):
     @app_commands.describe(
         url="url to qr code-ify"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def qr(
         self,
         interaction: Interaction,
         url: str
     ):
         qr_img = qrcode.make(url)
-
         buffer = io.BytesIO()
+
         qr_img.save(buffer, format="PNG")
         buffer.seek(0)
 
@@ -343,6 +328,15 @@ class Utility(commands.GroupCog, group_name="utility"):
     @app_commands.describe(
         time="time like 10s, 5m, 2h, 1d, 1w",
         message="what should I remind you about"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def remindme(
         self,
@@ -385,17 +379,18 @@ class Utility(commands.GroupCog, group_name="utility"):
 
         try:
             await interaction.user.send(embed=embed)
-
         except:
-            await interaction.channel.send(
-                content=interaction.user.mention,
-                embed=embed
-            )
+            if interaction.channel:
+                await interaction.channel.send(
+                    content=interaction.user.mention,
+                    embed=embed
+                )
 
     @group_1.command(
         name="forgetme",
         description="Export your Clanker data and delete everything (GDPR wipe)"
     )
+    @app_commands.guild_only()
     async def forgetme(
         self,
         interaction: Interaction
@@ -487,6 +482,15 @@ class Utility(commands.GroupCog, group_name="utility"):
     @app_commands.describe(
         game="steam game name"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def steam(
         self,
         interaction: Interaction,
@@ -500,11 +504,10 @@ class Utility(commands.GroupCog, group_name="utility"):
                     "https://store.steampowered.com/api/storesearch/",
                     params={
                         "term": game,
-                        "cc": "us", # this is the country code but in this case it's used for currency, just change it to like "gb" for pounds for example :)
+                        "cc": "gb",
                         "l": "english"
                     }
                 ) as resp:
-
                     if resp.status != 200:
                         embed = discord.Embed(
                             title="❌ Steam API Error",
@@ -538,7 +541,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                         embed=embed,
                         ephemeral=True
                     )
-                
+
                 def normalize(name):
                     name = name.lower()
 
@@ -563,7 +566,6 @@ class Utility(commands.GroupCog, group_name="utility"):
                     return name
 
                 requested = normalize(game)
-
                 exact_match = None
 
                 for item in items:
@@ -598,7 +600,6 @@ class Utility(commands.GroupCog, group_name="utility"):
                         "l": "english"
                     }
                 ) as resp:
-
                     if resp.status != 200:
                         embed = discord.Embed(
                             title="❌ Steam API Error",
@@ -664,6 +665,7 @@ class Utility(commands.GroupCog, group_name="utility"):
                         ),
                         inline=True
                     )
+
                 elif game_data.get("is_free"):
                     embed.add_field(
                         name="💰 Price",
@@ -761,7 +763,20 @@ class Utility(commands.GroupCog, group_name="utility"):
     @app_commands.describe(
         username="The GitHub username to look up"
     )
-    async def github(self, interaction: Interaction, username: str):
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def github(
+        self,
+        interaction: Interaction,
+        username: str
+    ):
         await interaction.response.defer()
 
         url = f"https://api.popcat.xyz/v2/github/{username}"
@@ -854,7 +869,20 @@ class Utility(commands.GroupCog, group_name="utility"):
     @app_commands.describe(
         query="The movie or TV show to search for"
     )
-    async def imdb(self, interaction: Interaction, query: str):
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def imdb(
+        self,
+        interaction: Interaction,
+        query: str
+    ):
         await interaction.response.defer()
 
         url = "https://api.popcat.xyz/v2/imdb"
@@ -996,7 +1024,20 @@ class Utility(commands.GroupCog, group_name="utility"):
     @app_commands.describe(
         query="The song to search for"
     )
-    async def itunes(self, interaction: Interaction, query: str):
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def itunes(
+        self,
+        interaction: Interaction,
+        query: str
+    ):
         await interaction.response.defer()
 
         url = "https://api.popcat.xyz/v2/itunes"
@@ -1090,7 +1131,20 @@ class Utility(commands.GroupCog, group_name="utility"):
     @app_commands.describe(
         query="The NPM package to look up"
     )
-    async def npm(self, interaction: Interaction, query: str):
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def npm(
+        self,
+        interaction: Interaction,
+        query: str
+    ):
         await interaction.response.defer()
 
         url = "https://api.popcat.xyz/v2/npm"
@@ -1191,7 +1245,20 @@ class Utility(commands.GroupCog, group_name="utility"):
     @app_commands.describe(
         place="The place to check"
     )
-    async def weather(self, interaction: Interaction, place: str):
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def weather(
+        self,
+        interaction: Interaction,
+        place: str
+    ):
         await interaction.response.defer()
 
         url = "https://api.popcat.xyz/v2/weather"
@@ -1293,64 +1360,197 @@ class Utility(commands.GroupCog, group_name="utility"):
                 "❌ Something went wrong while getting the weather."
             )
 
-    @group_1.command(name="translate", description="Translate text to another language")
-    @app_commands.describe(text="Text to translate", target="Target language code (e.g. es, fr, de, ja)", source="Source language (auto-detect if omitted)")
-    async def translate(self, interaction: discord.Interaction, text: str, target: str = "en", source: str = "auto"):
+    @group_1.command(
+        name="translate",
+        description="Translate text to another language"
+    )
+    @app_commands.describe(
+        text="Text to translate",
+        target="Target language code (e.g. es, fr, de, ja)",
+        source="Source language (auto-detect if omitted)"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def translate(
+        self,
+        interaction: Interaction,
+        text: str,
+        target: str = "en",
+        source: str = "auto"
+    ):
         await interaction.response.defer()
 
         try:
-            url = f"https://api.mymemory.translated.net/get?q={urllib.parse.quote(text[:500])}&langpair={source}|{target}"
+            url = (
+                "https://api.mymemory.translated.net/get"
+                f"?q={urllib.parse.quote(text[:500])}"
+                f"&langpair={source}|{target}"
+            )
+
             async with aiohttp.ClientSession() as session:
-                async with session.get(url, timeout=aiohttp.ClientTimeout(total=10)) as resp:
+                async with session.get(
+                    url,
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as resp:
                     if resp.status != 200:
-                        await interaction.followup.send(embed=self.embed("Error", "Translation API unavailable.", True))
+                        await interaction.followup.send(
+                            embed=self.embed(
+                                "Error",
+                                "Translation API unavailable.",
+                                True
+                            )
+                        )
                         return
+
                     data = await resp.json()
 
-            translated = data.get("responseData", {}).get("translatedText", "")
-            detected = data.get("responseData", {}).get("detectedLanguage", source)
+            translated = data.get(
+                "responseData",
+                {}
+            ).get(
+                "translatedText",
+                ""
+            )
+
+            detected = data.get(
+                "responseData",
+                {}
+            ).get(
+                "detectedLanguage",
+                source
+            )
 
             if not translated:
-                await interaction.followup.send(embed=self.embed("Error", "Translation failed.", True))
+                await interaction.followup.send(
+                    embed=self.embed(
+                        "Error",
+                        "Translation failed.",
+                        True
+                    )
+                )
                 return
 
             embed = discord.Embed(
                 title="Translation",
                 color=get_success_colour()
             )
-            embed.add_field(name=f"Original ({detected})", value=text[:1000], inline=False)
-            embed.add_field(name=f"Translated ({target})", value=translated[:1000], inline=False)
+
+            embed.add_field(
+                name=f"Original ({detected})",
+                value=text[:1000],
+                inline=False
+            )
+
+            embed.add_field(
+                name=f"Translated ({target})",
+                value=translated[:1000],
+                inline=False
+            )
 
             await interaction.followup.send(embed=embed)
 
         except Exception as e:
-            await interaction.followup.send(embed=self.embed("Error", f"Translation failed: {e}", True))
+            await interaction.followup.send(
+                embed=self.embed(
+                    "Error",
+                    f"Translation failed: {e}",
+                    True
+                )
+            )
 
     def embed(self, title, desc, error=False):
-        return discord.Embed(title=title, description=desc, color=0xFF0000 if error else 0xFFA500)
+        return discord.Embed(
+            title=title,
+            description=desc,
+            color=0xFF0000 if error else 0xFFA500
+        )
 
-    @group_1.command(name="urban", description="Look up a term on Urban Dictionary")
-    @app_commands.describe(term="Term to look up")
-    async def urban(self, interaction: discord.Interaction, term: str):
+    @group_1.command(
+        name="urban",
+        description="Look up a term on Urban Dictionary"
+    )
+    @app_commands.describe(
+        term="Term to look up"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def urban(
+        self,
+        interaction: Interaction,
+        term: str
+    ):
         await interaction.response.defer()
+
         try:
-            url = f"https://api.urbandictionary.com/v0/define?term={urllib.parse.quote(term)}"
+            url = (
+                "https://api.urbandictionary.com/v0/define"
+                f"?term={urllib.parse.quote(term)}"
+            )
+
             async with aiohttp.ClientSession() as session:
-                async with session.get(url, timeout=aiohttp.ClientTimeout(total=10)) as resp:
+                async with session.get(
+                    url,
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as resp:
                     data = await resp.json()
 
             definitions = data.get("list", [])
+
             if not definitions:
-                await interaction.followup.send(embed=self.embed("Error", f"No definitions found for `{term}`", True))
+                await interaction.followup.send(
+                    embed=self.embed(
+                        "Error",
+                        f"No definitions found for `{term}`",
+                        True
+                    )
+                )
                 return
 
             top = definitions[0]
-            definition = top.get("definition", "N/A")[:1000]
-            example = top.get("example", "")[:500]
-            author = top.get("author", "Unknown")
-            thumbs_up = top.get("thumbs_up", 0)
-            thumbs_down = top.get("thumbs_down", 0)
-            permalink = top.get("permalink", "")
+
+            definition = top.get(
+                "definition",
+                "N/A"
+            )[:1000]
+
+            example = top.get(
+                "example",
+                ""
+            )[:500]
+
+            author = top.get(
+                "author",
+                "Unknown"
+            )
+
+            thumbs_up = top.get(
+                "thumbs_up",
+                0
+            )
+
+            thumbs_down = top.get(
+                "thumbs_down",
+                0
+            )
+
+            permalink = top.get(
+                "permalink",
+                ""
+            )
 
             embed = discord.Embed(
                 title=f"📖 {top.get('word', term)}",
@@ -1358,22 +1558,65 @@ class Utility(commands.GroupCog, group_name="utility"):
                 color=get_success_colour(),
                 url=permalink
             )
+
             if example:
-                embed.add_field(name="Example", value=f"*{example}*", inline=False)
-            embed.set_footer(text=f"👍 {thumbs_up} | 👎 {thumbs_down} • by {author}")
+                embed.add_field(
+                    name="Example",
+                    value=f"*{example}*",
+                    inline=False
+                )
+
+            embed.set_footer(
+                text=f"👍 {thumbs_up} | 👎 {thumbs_down} • by {author}"
+            )
 
             view = discord.ui.View()
-            view.add_item(discord.ui.Button(label="View on Urban Dictionary", url=permalink, style=discord.ButtonStyle.link))
 
-            await interaction.followup.send(embed=embed, view=view)
+            view.add_item(
+                discord.ui.Button(
+                    label="View on Urban Dictionary",
+                    url=permalink,
+                    style=discord.ButtonStyle.link
+                )
+            )
+
+            await interaction.followup.send(
+                embed=embed,
+                view=view
+            )
 
         except Exception as e:
-            await interaction.followup.send(embed=self.embed("Error", f"Lookup failed: {e}", True))
+            await interaction.followup.send(
+                embed=self.embed(
+                    "Error",
+                    f"Lookup failed: {e}",
+                    True
+                )
+            )
 
-    @group_1.command(name="define", description="Look up a word definition")
-    @app_commands.describe(word="Word to define")
-    async def define(self, interaction: discord.Interaction, word: str):
+    @group_1.command(
+        name="define",
+        description="Look up a word definition"
+    )
+    @app_commands.describe(
+        word="Word to define"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def define(
+        self,
+        interaction: Interaction,
+        word: str
+    ):
         await interaction.response.defer()
+
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(
@@ -1381,13 +1624,28 @@ class Utility(commands.GroupCog, group_name="utility"):
                     timeout=aiohttp.ClientTimeout(total=10)
                 ) as resp:
                     if resp.status != 200:
-                        await interaction.followup.send(embed=self.embed("Error", f"No definition found for `{word}`", True))
+                        await interaction.followup.send(
+                            embed=self.embed(
+                                "Error",
+                                f"No definition found for `{word}`",
+                                True
+                            )
+                        )
                         return
+
                     data = await resp.json()
 
             entry = data[0]
-            word_title = entry.get("word", word)
-            phonetic = entry.get("phonetic", "")
+
+            word_title = entry.get(
+                "word",
+                word
+            )
+
+            phonetic = entry.get(
+                "phonetic",
+                ""
+            )
 
             embed = discord.Embed(
                 title=f"📖 {word_title}",
@@ -1395,12 +1653,27 @@ class Utility(commands.GroupCog, group_name="utility"):
                 color=get_success_colour()
             )
 
-            for meaning in entry.get("meanings", [])[:3]:
-                pos = meaning.get("partOfSpeech", "")
-                defs = meaning.get("definitions", [])[:2]
+            for meaning in entry.get(
+                "meanings",
+                []
+            )[:3]:
+                pos = meaning.get(
+                    "partOfSpeech",
+                    ""
+                )
+
+                defs = meaning.get(
+                    "definitions",
+                    []
+                )[:2]
+
                 lines = []
+
                 for d in defs:
-                    lines.append(f"• {d.get('definition', '')[:200]}")
+                    lines.append(
+                        f"• {d.get('definition', '')[:200]}"
+                    )
+
                 embed.add_field(
                     name=pos.title(),
                     value="\n".join(lines),
@@ -1410,46 +1683,158 @@ class Utility(commands.GroupCog, group_name="utility"):
             await interaction.followup.send(embed=embed)
 
         except Exception as e:
-            await interaction.followup.send(embed=self.embed("Error", f"Definition lookup failed: {e}", True))
+            await interaction.followup.send(
+                embed=self.embed(
+                    "Error",
+                    f"Definition lookup failed: {e}",
+                    True
+                )
+            )
 
-    @group_1.command(name="ip", description="Look up an IP address")
-    @app_commands.describe(ip="IP address to look up")
-    async def ip(self, interaction: discord.Interaction, ip: str):
+    @group_1.command(
+        name="ip",
+        description="Look up an IP address"
+    )
+    @app_commands.describe(
+        ip="IP address to look up"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def ip(
+        self,
+        interaction: Interaction,
+        ip: str
+    ):
         await interaction.response.defer()
+
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(f"http://ip-api.com/json/{ip}", timeout=aiohttp.ClientTimeout(total=10)) as resp:
+                async with session.get(
+                    f"http://ip-api.com/json/{ip}",
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as resp:
                     data = await resp.json()
 
             if data.get("status") == "fail":
-                await interaction.followup.send(embed=self.embed("Error", f"Could not look up `{ip}`", True))
+                await interaction.followup.send(
+                    embed=self.embed(
+                        "Error",
+                        f"Could not look up `{ip}`",
+                        True
+                    )
+                )
                 return
 
-            embed = discord.Embed(title=f"IP: {ip}", color=get_success_colour())
-            embed.add_field(name="Country", value=data.get("country", "?"), inline=True)
-            embed.add_field(name="Region", value=data.get("regionName", "?"), inline=True)
-            embed.add_field(name="City", value=data.get("city", "?"), inline=True)
-            embed.add_field(name="ISP", value=data.get("isp", "?"), inline=True)
-            embed.add_field(name="Org", value=data.get("org", "?"), inline=True)
-            embed.add_field(name="AS", value=data.get("as", "?"), inline=True)
-            embed.add_field(name="Lat/Lon", value=f"{data.get('lat', '?')}, {data.get('lon', '?')}", inline=True)
-            embed.add_field(name="Timezone", value=data.get("timezone", "?"), inline=True)
+            embed = discord.Embed(
+                title=f"IP: {ip}",
+                color=get_success_colour()
+            )
+
+            embed.add_field(
+                name="Country",
+                value=data.get("country", "?"),
+                inline=True
+            )
+
+            embed.add_field(
+                name="Region",
+                value=data.get("regionName", "?"),
+                inline=True
+            )
+
+            embed.add_field(
+                name="City",
+                value=data.get("city", "?"),
+                inline=True
+            )
+
+            embed.add_field(
+                name="ISP",
+                value=data.get("isp", "?"),
+                inline=True
+            )
+
+            embed.add_field(
+                name="Org",
+                value=data.get("org", "?"),
+                inline=True
+            )
+
+            embed.add_field(
+                name="AS",
+                value=data.get("as", "?"),
+                inline=True
+            )
+
+            embed.add_field(
+                name="Lat/Lon",
+                value=f"{data.get('lat', '?')}, {data.get('lon', '?')}",
+                inline=True
+            )
+
+            embed.add_field(
+                name="Timezone",
+                value=data.get("timezone", "?"),
+                inline=True
+            )
 
             await interaction.followup.send(embed=embed)
 
         except Exception as e:
-            await interaction.followup.send(embed=self.embed("Error", f"Lookup failed: {e}", True))
+            await interaction.followup.send(
+                embed=self.embed(
+                    "Error",
+                    f"Lookup failed: {e}",
+                    True
+                )
+            )
 
-    @group_1.command(name="dns", description="DNS lookup for a domain")
-    @app_commands.describe(domain="Domain to look up")
-    async def dns(self, interaction: discord.Interaction, domain: str):
+    @group_1.command(
+        name="dns",
+        description="DNS lookup for a domain"
+    )
+    @app_commands.describe(
+        domain="Domain to look up"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def dns(
+        self,
+        interaction: Interaction,
+        domain: str
+    ):
         await interaction.response.defer()
+
         try:
             results = {}
 
             try:
-                ips = socket.getaddrinfo(domain, None)
-                results["A"] = list(set(addr[4][0] for addr in ips))
+                ips = socket.getaddrinfo(
+                    domain,
+                    None
+                )
+
+                results["A"] = list(
+                    set(
+                        addr[4][0]
+                        for addr in ips
+                    )
+                )
+
             except:
                 pass
 
@@ -1460,40 +1845,108 @@ class Utility(commands.GroupCog, group_name="utility"):
                         timeout=aiohttp.ClientTimeout(total=10)
                     ) as resp:
                         data = await resp.json()
-                        for answer in data.get("Answer", []):
-                            rtype = answer.get("type", 0)
-                            name = answer.get("name", "")
-                            value = answer.get("data", "")
-                            type_names = {1: "A", 2: "NS", 5: "CNAME", 6: "SOA", 15: "MX", 16: "TXT", 28: "AAAA", 33: "SRV"}
-                            type_name = type_names.get(rtype, str(rtype))
+
+                        for answer in data.get(
+                            "Answer",
+                            []
+                        ):
+                            rtype = answer.get(
+                                "type",
+                                0
+                            )
+
+                            value = answer.get(
+                                "data",
+                                ""
+                            )
+
+                            type_names = {
+                                1: "A",
+                                2: "NS",
+                                5: "CNAME",
+                                6: "SOA",
+                                15: "MX",
+                                16: "TXT",
+                                28: "AAAA",
+                                33: "SRV"
+                            }
+
+                            type_name = type_names.get(
+                                rtype,
+                                str(rtype)
+                            )
+
                             if type_name not in results:
                                 results[type_name] = []
+
                             results[type_name].append(value)
+
                 except:
                     pass
 
             if not results:
-                await interaction.followup.send(embed=self.embed("Error", f"No DNS records found for `{domain}`", True))
+                await interaction.followup.send(
+                    embed=self.embed(
+                        "Error",
+                        f"No DNS records found for `{domain}`",
+                        True
+                    )
+                )
                 return
 
-            embed = discord.Embed(title=f"DNS: {domain}", color=get_success_colour())
+            embed = discord.Embed(
+                title=f"DNS: {domain}",
+                color=get_success_colour()
+            )
+
             for rtype, values in results.items():
-                embed.add_field(name=rtype, value="\n".join(values[:5]), inline=False)
+                embed.add_field(
+                    name=rtype,
+                    value="\n".join(values[:5]),
+                    inline=False
+                )
 
             await interaction.followup.send(embed=embed)
 
         except Exception as e:
-            await interaction.followup.send(embed=self.embed("Error", f"DNS lookup failed: {e}", True))
+            await interaction.followup.send(
+                embed=self.embed(
+                    "Error",
+                    f"DNS lookup failed: {e}",
+                    True
+                )
+            )
 
-    @group_1.command(name="whois", description="WHOIS lookup for a domain")
-    @app_commands.describe(domain="Domain to look up")
-    async def whois(self, interaction: discord.Interaction, domain: str):
+    @group_1.command(
+        name="whois",
+        description="WHOIS lookup for a domain"
+    )
+    @app_commands.describe(
+        domain="Domain to look up"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def whois(
+        self,
+        interaction: Interaction,
+        domain: str
+    ):
         await interaction.response.defer()
 
         try:
             domain = domain.strip().lower()
 
-            data = await asyncio.to_thread(whois.whois, domain)
+            data = await asyncio.to_thread(
+                whois.whois,
+                domain
+            )
 
             embed = discord.Embed(
                 title=f"WHOIS: {domain}",
@@ -1504,7 +1957,10 @@ class Utility(commands.GroupCog, group_name="utility"):
                 if value is None:
                     return None
 
-                if isinstance(value, (list, tuple, set)):
+                if isinstance(
+                    value,
+                    (list, tuple, set)
+                ):
                     values = []
 
                     for item in value:
@@ -1518,7 +1974,12 @@ class Utility(commands.GroupCog, group_name="utility"):
 
                 return str(value)
 
-            def add_field(name, value, inline=True, limit=1024):
+            def add_field(
+                name,
+                value,
+                inline=True,
+                limit=1024
+            ):
                 value = format_value(value)
 
                 if not value:
@@ -1537,18 +1998,13 @@ class Utility(commands.GroupCog, group_name="utility"):
             add_field("Registrar", data.registrar)
             add_field("WHOIS Server", data.whois_server)
             add_field("Referral URL", data.referral_url)
-
             add_field("Created", data.creation_date)
             add_field("Updated", data.updated_date)
             add_field("Expires", data.expiration_date)
-
             add_field("Status", data.status, inline=False)
             add_field("Nameservers", data.name_servers, inline=False)
-
             add_field("Emails", data.emails, inline=False)
-
             add_field("DNSSEC", data.dnssec)
-
             add_field("Name", data.name)
             add_field("Organization", data.org)
             add_field("Country", data.country)
@@ -1556,7 +2012,6 @@ class Utility(commands.GroupCog, group_name="utility"):
             add_field("City", data.city)
             add_field("Address", data.address)
             add_field("Postal Code", data.zipcode)
-
             add_field("Registrant Name", data.name)
             add_field("Registrant Organization", data.org)
 
@@ -1570,7 +2025,9 @@ class Utility(commands.GroupCog, group_name="utility"):
                 )
                 return
 
-            embed.set_footer(text="Data retrieved from the domain's WHOIS server")
+            embed.set_footer(
+                text="Data retrieved from the domain's WHOIS server"
+            )
 
             await interaction.followup.send(embed=embed)
 
@@ -1583,22 +2040,72 @@ class Utility(commands.GroupCog, group_name="utility"):
                 )
             )
 
-    @group_1.command(name="portcheck", description="Check if a port is open on a host")
-    @app_commands.describe(host="Hostname or IP", port="Port number")
-    async def portcheck(self, interaction: discord.Interaction, host: str, port: int):
+    @group_1.command(
+        name="portcheck",
+        description="Check if a port is open on a host"
+    )
+    @app_commands.describe(
+        host="Hostname or IP",
+        port="Port number"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def portcheck(
+        self,
+        interaction: Interaction,
+        host: str,
+        port: int
+    ):
         await interaction.response.defer()
+
         try:
-            import asyncio
             open_port = await asyncio.wait_for(
-                asyncio.get_event_loop().run_in_executor(None, lambda: socket.create_connection((host, port), timeout=3)),
+                asyncio.get_event_loop().run_in_executor(
+                    None,
+                    lambda: socket.create_connection(
+                        (host, port),
+                        timeout=3
+                    )
+                ),
                 timeout=5
             )
+
             open_port.close()
-            await interaction.followup.send(embed=self.embed("✅ Port Open", f"**{host}:{port}** is open."))
-        except (socket.timeout, ConnectionRefusedError, OSError):
-            await interaction.followup.send(embed=self.embed("❌ Port Closed", f"**{host}:{port}** is closed or filtered."))
+
+            await interaction.followup.send(
+                embed=self.embed(
+                    "✅ Port Open",
+                    f"**{host}:{port}** is open."
+                )
+            )
+
+        except (
+            socket.timeout,
+            ConnectionRefusedError,
+            OSError
+        ):
+            await interaction.followup.send(
+                embed=self.embed(
+                    "❌ Port Closed",
+                    f"**{host}:{port}** is closed or filtered."
+                )
+            )
+
         except Exception as e:
-            await interaction.followup.send(embed=self.embed("❌ Error", f"Check failed: {e}", True))
+            await interaction.followup.send(
+                embed=self.embed(
+                    "❌ Error",
+                    f"Check failed: {e}",
+                    True
+                )
+            )
 
     @group_1.command(
         name="calculate",
@@ -1607,6 +2114,15 @@ class Utility(commands.GroupCog, group_name="utility"):
     @app_commands.describe(
         equation="Equation"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def calculate(
         self,
         interaction: Interaction,
@@ -1614,24 +2130,24 @@ class Utility(commands.GroupCog, group_name="utility"):
     ):
         result = 0
         failed = False
+
         try:
             result = mathparse.parse(equation)
         except:
             failed = True
 
         result_str = str(result)
+
         if failed:
             result_str = "Failed, invalid input!"
-        
-        embed = discord.Embed(
-                title="📐 Calculate",
-                description=(
-                    result_str
-                ),
-                color=get_success_colour()
-            )
 
-        return await interaction.response.send_message(
+        embed = discord.Embed(
+            title="📐 Calculate",
+            description=result_str,
+            color=get_success_colour()
+        )
+
+        await interaction.response.send_message(
             embed=embed
         )
 

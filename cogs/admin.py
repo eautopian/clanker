@@ -1,5 +1,3 @@
-# im an adminininmimimmmimin file!
-
 from discord import app_commands, Interaction
 from discord.ext import commands
 import discord
@@ -14,85 +12,19 @@ ini.read("config.ini")
 
 OWNERID = int(ini["DEFAULT"]["owner"])
 
-def owner_check(): 
-    async def predicate(interaction: Interaction): 
+def owner_check():
+    async def predicate(interaction: Interaction):
         return interaction.user.id == OWNERID
-    
+
     return app_commands.check(predicate)
 
 class Admin(commands.GroupCog, group_name="admin"):
     def __init__(self, bot):
         self.bot = bot
 
-    async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        if interaction.guild is None:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Server Installation Required",
-                    description=(
-                        "Sorry, Clanker can only be installed in a server.\n\n"
-                        "Please add Clanker to a server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        try:
-            await interaction.guild.fetch_member(self.bot.user.id)
-
-        except discord.NotFound:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Clanker Isn't Installed",
-                    description=(
-                        "Clanker isn't installed in this server.\n\n"
-                        "Please add Clanker to this server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        except discord.Forbidden:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Unable to Check",
-                    description=(
-                        "I couldn't verify whether Clanker is installed "
-                        "in this server."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        except discord.HTTPException:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Discord Error",
-                    description=(
-                        "Discord didn't let me verify whether Clanker "
-                        "is installed in this server. Please try again."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        return True
-
     def save_data(self):
         with open("data.json", "w") as f:
             json.dump(self.bot.data, f, indent=4)
-
-    # ============================================================
-    # PAGE 1
-    # ============================================================
 
     group_1 = app_commands.Group(
         name="1",
@@ -104,10 +36,19 @@ class Admin(commands.GroupCog, group_name="admin"):
         description="(OWNER) give someone admin"
     )
     @owner_check()
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def addadmin(
         self,
         interaction: Interaction,
-        user: discord.Member
+        user: discord.User
     ):
         if user.id in self.bot.data.get("admins", []):
             return await interaction.response.send_message(
@@ -136,10 +77,19 @@ class Admin(commands.GroupCog, group_name="admin"):
         description="(OWNER) remove admin"
     )
     @owner_check()
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def removeadmin(
         self,
         interaction: Interaction,
-        user: discord.Member
+        user: discord.User
     ):
         if user.id not in self.bot.data.get("admins", []):
             return await interaction.response.send_message(
@@ -168,6 +118,15 @@ class Admin(commands.GroupCog, group_name="admin"):
         description="(OWNER) list admins"
     )
     @owner_check()
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def listadmins(
         self,
         interaction: Interaction
@@ -200,6 +159,7 @@ class Admin(commands.GroupCog, group_name="admin"):
         description="(OWNER) send license troll message"
     )
     @owner_check()
+    @app_commands.guild_only()
     async def license(
         self,
         interaction: Interaction,
@@ -280,10 +240,11 @@ class Admin(commands.GroupCog, group_name="admin"):
         description="(OWNER) give money"
     )
     @owner_check()
+    @app_commands.guild_only()
     async def give(
         self,
         interaction: Interaction,
-        user: discord.Member,
+        user: discord.User,
         amount: int
     ):
         if amount <= 0:
@@ -314,7 +275,6 @@ class Admin(commands.GroupCog, group_name="admin"):
         )
 
         target = economy.user_dict(row)
-
         target["balance"] += amount
         economy.update_user(target)
 
@@ -332,10 +292,11 @@ class Admin(commands.GroupCog, group_name="admin"):
         description="(OWNER) remove money"
     )
     @owner_check()
+    @app_commands.guild_only()
     async def take(
         self,
         interaction: Interaction,
-        user: discord.Member,
+        user: discord.User,
         amount: int
     ):
         if amount <= 0:
@@ -386,6 +347,15 @@ class Admin(commands.GroupCog, group_name="admin"):
         description="(OWNER) DM a user"
     )
     @owner_check()
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def dm(
         self,
         interaction: Interaction,
@@ -426,6 +396,15 @@ class Admin(commands.GroupCog, group_name="admin"):
         description="(OWNER/ADMIN) list all bot servers"
     )
     @owner_check()
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def servers(
         self,
         interaction: Interaction
@@ -437,7 +416,7 @@ class Admin(commands.GroupCog, group_name="admin"):
         )
 
         per_page = 10
-        pages = math.ceil(len(guilds) / per_page)
+        pages = max(1, math.ceil(len(guilds) / per_page))
         page = 0
 
         def make_embed(page: int):
@@ -519,6 +498,15 @@ class Admin(commands.GroupCog, group_name="admin"):
         description="(OWNER/ADMIN) View current CCU"
     )
     @owner_check()
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def ccu(
         self,
         interaction: Interaction

@@ -12,7 +12,9 @@ import shutil
 import random
 from cogs.theming import get_fail_colour, get_success_colour
 
+
 class Images(commands.GroupCog, group_name="image"):
+
     image_1 = app_commands.Group(
         name="1",
         description="Image - page 1"
@@ -24,70 +26,6 @@ class Images(commands.GroupCog, group_name="image"):
 
     def __init__(self, bot):
         self.bot = bot
-
-    async def interaction_check(
-        self,
-        interaction: discord.Interaction
-    ) -> bool:
-        if interaction.guild is None:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Server Installation Required",
-                    description=(
-                        "Sorry, Clanker can only be installed in a server.\n\n"
-                        "Please add Clanker to a server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        try:
-            await interaction.guild.fetch_member(
-                self.bot.user.id
-            )
-        except discord.NotFound:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Clanker Isn't Installed",
-                    description=(
-                        "Clanker isn't installed in this server.\n\n"
-                        "Please add Clanker to this server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-        except discord.Forbidden:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Unable to Check",
-                    description=(
-                        "I couldn't verify whether Clanker is installed "
-                        "in this server."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-        except discord.HTTPException:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Discord Error",
-                    description=(
-                        "Discord didn't let me verify whether Clanker "
-                        "is installed in this server. Please try again."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        return True
 
     async def send_error(
         self,
@@ -132,6 +70,7 @@ class Images(commands.GroupCog, group_name="image"):
 
                 if replied.attachments:
                     media_url = replied.attachments[0].url
+
             except:
                 pass
 
@@ -158,10 +97,12 @@ class Images(commands.GroupCog, group_name="image"):
             async with aiohttp.ClientSession(
                 timeout=timeout
             ) as session:
+
                 async with session.get(
                     media_url,
                     allow_redirects=True
                 ) as response:
+
                     if response.status != 200:
                         return False, "Failed to download the media."
 
@@ -185,6 +126,7 @@ class Images(commands.GroupCog, group_name="image"):
                         output_path,
                         "wb"
                     ) as file:
+
                         async for chunk in response.content.iter_chunked(
                             1024 * 256
                         ):
@@ -282,13 +224,13 @@ class Images(commands.GroupCog, group_name="image"):
                     )
 
                 result = img.copy()
-
                 img.close()
 
                 return result, None, None
 
             except Exception as e:
                 print(e)
+
                 return (
                     None,
                     "Invalid Image 🚫",
@@ -348,6 +290,15 @@ class Images(commands.GroupCog, group_name="image"):
         name="invert",
         description="Invert an image"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def invert(
         self,
         interaction: Interaction,
@@ -383,6 +334,15 @@ class Images(commands.GroupCog, group_name="image"):
     @image_1.command(
         name="greyscale",
         description="Convert an image to greyscale"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def greyscale(
         self,
@@ -420,6 +380,15 @@ class Images(commands.GroupCog, group_name="image"):
     @image_1.command(
         name="deepfry",
         description="Deep fry an image"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def deepfry(
         self,
@@ -471,6 +440,15 @@ class Images(commands.GroupCog, group_name="image"):
         name="blur",
         description="Blur an image"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def blur(
         self,
         interaction: Interaction,
@@ -515,6 +493,15 @@ class Images(commands.GroupCog, group_name="image"):
     @image_1.command(
         name="bloom",
         description="Add bloom effect to an image"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def bloom(
         self,
@@ -564,6 +551,15 @@ class Images(commands.GroupCog, group_name="image"):
     @image_1.command(
         name="pixelate",
         description="Pixelate an image"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def pixelate(
         self,
@@ -625,6 +621,15 @@ class Images(commands.GroupCog, group_name="image"):
         name="gif",
         description="Turn an image into a GIF"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def gif(
         self,
         interaction: Interaction,
@@ -664,9 +669,7 @@ class Images(commands.GroupCog, group_name="image"):
 
         embed = discord.Embed(
             title="Image → GIF 🖼️",
-            description=(
-                "GIFs are limited to 256 colors - quality may drop ⚠️"
-            ),
+            description="GIFs are limited to 256 colors - quality may drop ⚠️",
             color=get_success_colour()
         )
 
@@ -684,6 +687,15 @@ class Images(commands.GroupCog, group_name="image"):
     @image_1.command(
         name="png",
         description="Turn an image into a PNG"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def png(
         self,
@@ -721,6 +733,15 @@ class Images(commands.GroupCog, group_name="image"):
         name="jpg",
         description="Turn an image into a JPG"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def jpg(
         self,
         interaction: Interaction,
@@ -753,9 +774,7 @@ class Images(commands.GroupCog, group_name="image"):
                 (255, 255, 255)
             )
 
-            rgba = img.convert(
-                "RGBA"
-            )
+            rgba = img.convert("RGBA")
 
             background.paste(
                 rgba,
@@ -763,13 +782,10 @@ class Images(commands.GroupCog, group_name="image"):
             )
 
             result = background
-
             rgba.close()
 
         else:
-            result = img.convert(
-                "RGB"
-            )
+            result = img.convert("RGB")
 
         buffer = io.BytesIO()
 
@@ -788,9 +804,7 @@ class Images(commands.GroupCog, group_name="image"):
 
         embed = discord.Embed(
             title="Image → JPG 🖼️",
-            description=(
-                "Transparency has been replaced with a white background."
-            ),
+            description="Transparency has been replaced with a white background.",
             color=get_success_colour()
         )
 
@@ -809,6 +823,15 @@ class Images(commands.GroupCog, group_name="image"):
     @image_1.command(
         name="webp",
         description="Turn an image into a WebP"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def webp(
         self,
@@ -829,9 +852,7 @@ class Images(commands.GroupCog, group_name="image"):
                 err_desc
             )
 
-        result = img.convert(
-            "RGBA"
-        )
+        result = img.convert("RGBA")
 
         buffer = io.BytesIO()
 
@@ -869,6 +890,15 @@ class Images(commands.GroupCog, group_name="image"):
     @image_1.command(
         name="caption",
         description="Add a caption to an image or GIF"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def caption(
         self,
@@ -1092,248 +1122,17 @@ class Images(commands.GroupCog, group_name="image"):
             img.close()
 
     @image_1.command(
-        name="quote",
-        description="Create a dramatic quote"
-    )
-    async def quote(
-        self,
-        interaction: discord.Interaction,
-        user: discord.Member = None,
-        text: str = None
-    ):
-        await interaction.response.defer()
-
-        author = interaction.user
-
-        if user and not text:
-            found = False
-
-            async for message in interaction.channel.history(
-                limit=100
-            ):
-                if (
-                    message.author.id == user.id
-                    and message.content
-                ):
-                    text = message.content
-                    author = user
-                    found = True
-                    break
-
-            if not found:
-                return await interaction.followup.send(
-                    embed=discord.Embed(
-                        title="Error ❌",
-                        description=(
-                            "Couldn't find a recent message from that user."
-                        ),
-                        color=get_fail_colour()
-                    )
-                )
-
-        if not text:
-            return await interaction.followup.send(
-                embed=discord.Embed(
-                    title="Error ❌",
-                    description="Provide text or a user to quote.",
-                    color=get_fail_colour()
-                )
-            )
-
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(
-                    author.display_avatar.url
-                ) as response:
-                    avatar_bytes = await response.read()
-
-            avatar = Image.open(
-                io.BytesIO(avatar_bytes)
-            ).convert("RGBA")
-
-            width = 1400
-            height = 700
-
-            img = Image.new(
-                "RGBA",
-                (width, height),
-                (12, 12, 18, 255)
-            )
-
-            draw = ImageDraw.Draw(
-                img
-            )
-
-            glow = Image.new(
-                "RGBA",
-                (width, height),
-                (0, 0, 0, 0)
-            )
-
-            glow_draw = ImageDraw.Draw(
-                glow
-            )
-
-            glow_draw.ellipse(
-                (1050, 260, 1320, 530),
-                fill=(120, 80, 255, 120)
-            )
-
-            glow = glow.filter(
-                ImageFilter.GaussianBlur(
-                    60
-                )
-            )
-
-            img.alpha_composite(
-                glow
-            )
-
-            name_font = ImageFont.truetype(
-                "C:/Windows/Fonts/arial.ttf",
-                38
-            )
-
-            small_font = ImageFont.truetype(
-                "C:/Windows/Fonts/arial.ttf",
-                25
-            )
-
-            draw.text(
-                (70, 20),
-                "“",
-                font=ImageFont.truetype(
-                    "C:/Windows/Fonts/georgia.ttf",
-                    220
-                ),
-                fill=(255, 255, 255, 35)
-            )
-
-            max_text_width = 750
-            font_size = 65
-
-            while True:
-                quote_font = ImageFont.truetype(
-                    "C:/Windows/Fonts/georgia.ttf",
-                    font_size
-                )
-
-                wrapped = textwrap.fill(
-                    text,
-                    width=max(
-                        15,
-                        int(font_size / 2)
-                    )
-                )
-
-                bbox = draw.multiline_textbbox(
-                    (0, 0),
-                    f'"{wrapped}"',
-                    font=quote_font,
-                    spacing=15
-                )
-
-                text_width = (
-                    bbox[2] -
-                    bbox[0]
-                )
-
-                if (
-                    text_width <= max_text_width
-                    or font_size <= 30
-                ):
-                    break
-
-                font_size -= 5
-
-            text_height = (
-                bbox[3] -
-                bbox[1]
-            )
-
-            draw.multiline_text(
-                (
-                    100,
-                    (height - text_height) // 2 - 40
-                ),
-                f'"{wrapped}"',
-                font=quote_font,
-                fill="white",
-                spacing=15
-            )
-
-            avatar = avatar.resize(
-                (180, 180)
-            )
-
-            mask = Image.new(
-                "L",
-                avatar.size,
-                0
-            )
-
-            mask_draw = ImageDraw.Draw(
-                mask
-            )
-
-            mask_draw.ellipse(
-                (0, 0, 180, 180),
-                fill=255
-            )
-
-            img.paste(
-                avatar,
-                (1080, 300),
-                mask
-            )
-
-            draw.text(
-                (980, 510),
-                f"- {author.display_name}",
-                font=name_font,
-                fill=(220, 220, 220)
-            )
-
-            draw.text(
-                (100, 630),
-                "https://clanker.pxsl.dev/",
-                font=small_font,
-                fill=(130, 130, 130)
-            )
-
-            buffer = io.BytesIO()
-
-            img.convert(
-                "RGB"
-            ).save(
-                buffer,
-                "PNG"
-            )
-
-            buffer.seek(0)
-
-            await interaction.followup.send(
-                file=discord.File(
-                    buffer,
-                    "quote.png"
-                )
-            )
-
-            avatar.close()
-            img.close()
-
-        except:
-            await interaction.followup.send(
-                embed=discord.Embed(
-                    title="Error ❌",
-                    description="Couldn't create the quote image.",
-                    color=get_fail_colour()
-                )
-            )
-
-    @image_1.command(
         name="brighten",
         description="Brighten an image"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def brighten(
         self,
@@ -1379,6 +1178,15 @@ class Images(commands.GroupCog, group_name="image"):
     @image_1.command(
         name="darken",
         description="Darken an image"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def darken(
         self,
@@ -1427,6 +1235,15 @@ class Images(commands.GroupCog, group_name="image"):
     @image_1.command(
         name="sharpen",
         description="Sharpen an image"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def sharpen(
         self,
@@ -1477,6 +1294,15 @@ class Images(commands.GroupCog, group_name="image"):
         name="contrast",
         description="Change the contrast of an image"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def contrast(
         self,
         interaction: Interaction,
@@ -1521,6 +1347,15 @@ class Images(commands.GroupCog, group_name="image"):
     @image_1.command(
         name="destroy",
         description="Absolutely destroy an image"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def destroy(
         self,
@@ -1686,6 +1521,8 @@ class Images(commands.GroupCog, group_name="image"):
                     Image.Resampling.NEAREST
                 )
 
+                small.close()
+
             elif effect == "noise":
                 noise = Image.effect_noise(
                     img.size,
@@ -1699,6 +1536,8 @@ class Images(commands.GroupCog, group_name="image"):
                     noise,
                     0.25
                 )
+
+                noise.close()
 
                 applied.append(
                     "Noise"
@@ -1734,6 +1573,15 @@ class Images(commands.GroupCog, group_name="image"):
         name="rotate",
         description="Change the rotation of an image"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def rotate(
         self,
         interaction: Interaction,
@@ -1748,9 +1596,6 @@ class Images(commands.GroupCog, group_name="image"):
             url
         )
 
-        if clockwise:
-            angle = -angle
-
         if not img:
             return await self.send_error(
                 interaction,
@@ -1758,25 +1603,37 @@ class Images(commands.GroupCog, group_name="image"):
                 err_desc
             )
 
-        result = img.rotate(angle=angle)
-
-        clockwiseStr = "Counter-clockwise"
         if clockwise:
-            clockwiseStr = "Clockwise"
+            angle = -angle
+
+        result = img.rotate(
+            angle=angle
+        )
+
+        clockwise_str = "Clockwise" if clockwise else "Counter-clockwise"
 
         await self.send_image(
             interaction,
             result,
-            f"Rotate Image 🔄 {clockwiseStr} (Angle: {abs(angle)})",
+            f"Rotate Image 🔄 {clockwise_str} (Angle: {abs(angle)})",
             "rotate.png"
         )
 
         img.close()
         result.close()
-    
+
     @image_1.command(
         name="flip",
         description="Flip an image"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def flip(
         self,
@@ -1797,12 +1654,14 @@ class Images(commands.GroupCog, group_name="image"):
                 err_desc
             )
 
-        result = img.transpose(method=Image.Transpose.FLIP_LEFT_RIGHT)
+        result = img.transpose(
+            method=Image.Transpose.FLIP_LEFT_RIGHT
+        )
 
         await self.send_image(
             interaction,
             result,
-            f"Flipped Image 🔄",
+            "Flipped Image 🔄",
             "flipped.png"
         )
 

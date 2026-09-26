@@ -14,122 +14,49 @@ from cogs.theming import get_fail_colour, get_success_colour
 click_count = 0
 
 class ClickerView(discord.ui.View):
+
     def __init__(self):
         super().__init__(timeout=None)
-
         self.click_button = discord.ui.Button(
             label=f"🖱️ Clicks: {click_count}",
             style=discord.ButtonStyle.blurple
         )
-
         self.click_button.callback = self.button_clicked
         self.add_item(self.click_button)
 
     async def button_clicked(self, interaction: discord.Interaction):
         global click_count
-
         click_count += 1
-
         self.click_button.label = f"🖱️ Clicks: {click_count}"
-
         await interaction.response.edit_message(view=self)
 
+
 class Social(commands.GroupCog, group_name="social"):
+
     def __init__(self, bot):
         self.bot = bot
         self.profile_db = sqlite3.connect("profiles.db")
         self.profile_cursor = self.profile_db.cursor()
         self.setup_profiles()
 
-    async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        if interaction.guild is None:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Server Installation Required",
-                    description=(
-                        "Sorry, Clanker can only be installed in a server.\n\n"
-                        "Please add Clanker to a server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        try:
-            await interaction.guild.fetch_member(self.bot.user.id)
-
-        except discord.NotFound:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Clanker Isn't Installed",
-                    description=(
-                        "Clanker isn't installed in this server.\n\n"
-                        "Please add Clanker to this server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        except discord.Forbidden:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Unable to Check",
-                    description=(
-                        "I couldn't verify whether Clanker is installed "
-                        "in this server."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        except discord.HTTPException:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Discord Error",
-                    description=(
-                        "Discord didn't let me verify whether Clanker "
-                        "is installed in this server. Please try again."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        return True
-
     def setup_profiles(self):
         self.profile_cursor.execute("""
             CREATE TABLE IF NOT EXISTS user_profiles (
-
                 user_id INTEGER PRIMARY KEY,
-
                 commands_used INTEGER DEFAULT 0,
-
                 first_seen TEXT
-
             )
         """)
 
         self.profile_cursor.execute("""
             CREATE TABLE IF NOT EXISTS command_usage (
-
                 user_id INTEGER,
-
                 command TEXT,
-
                 uses INTEGER DEFAULT 0,
-
                 PRIMARY KEY(
                     user_id,
                     command
                 )
-
             )
         """)
 
@@ -140,7 +67,6 @@ class Social(commands.GroupCog, group_name="social"):
         user_id: int,
         command: str
     ):
-
         now = datetime.now(
             timezone.utc
         ).isoformat()
@@ -152,18 +78,12 @@ class Social(commands.GroupCog, group_name="social"):
                 commands_used,
                 first_seen
             )
-
             VALUES (?, 1, ?)
-
             ON CONFLICT(user_id)
-
             DO UPDATE SET
-
                 commands_used =
                 commands_used + 1
-
-        """,
-        (
+        """, (
             user_id,
             now
         ))
@@ -175,23 +95,17 @@ class Social(commands.GroupCog, group_name="social"):
                 command,
                 uses
             )
-
             VALUES (?, ?, 1)
-
 
             ON CONFLICT(
                 user_id,
                 command
             )
 
-
             DO UPDATE SET
-
                 uses =
                 uses + 1
-
-        """,
-        (
+        """, (
             user_id,
             command
         ))
@@ -202,18 +116,13 @@ class Social(commands.GroupCog, group_name="social"):
         self,
         user_id: int
     ):
-
         self.profile_cursor.execute("""
             SELECT
                 commands_used,
                 first_seen
-
             FROM user_profiles
-
             WHERE user_id=?
-
-        """,
-        (
+        """, (
             user_id,
         ))
 
@@ -229,17 +138,11 @@ class Social(commands.GroupCog, group_name="social"):
         self.profile_cursor.execute("""
             SELECT
                 command
-
             FROM command_usage
-
             WHERE user_id=?
-
             ORDER BY uses DESC
-
             LIMIT 1
-
-        """,
-        (
+        """, (
             user_id,
         ))
 
@@ -252,10 +155,8 @@ class Social(commands.GroupCog, group_name="social"):
         }
 
     def get_profile_count(self):
-
         self.profile_cursor.execute("""
             SELECT COUNT(*)
-
             FROM user_profiles
         """)
 
@@ -266,7 +167,6 @@ class Social(commands.GroupCog, group_name="social"):
         self,
         interaction: discord.Interaction
     ):
-
         if interaction.type != discord.InteractionType.application_command:
             return
 
@@ -286,6 +186,15 @@ class Social(commands.GroupCog, group_name="social"):
     @group_1.command(
         name="expose",
         description="expose a user..."
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     @app_commands.describe(
         user="user to expose"
@@ -334,6 +243,15 @@ class Social(commands.GroupCog, group_name="social"):
         name="compliment",
         description="give someone a compliment :3"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     @app_commands.describe(
         user="user to compliment"
     )
@@ -376,6 +294,15 @@ class Social(commands.GroupCog, group_name="social"):
         name="roast",
         description="roast someone :3"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     @app_commands.describe(
         user="user to roast"
     )
@@ -414,6 +341,15 @@ class Social(commands.GroupCog, group_name="social"):
         name="slap",
         description="slap someone lol"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def slap(
         self,
         interaction: Interaction,
@@ -438,6 +374,15 @@ class Social(commands.GroupCog, group_name="social"):
     @group_1.command(
         name="hug",
         description="hug someone <3"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def hug(
         self,
@@ -464,6 +409,15 @@ class Social(commands.GroupCog, group_name="social"):
         name="poke",
         description="poke someone hehe"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def poke(
         self,
         interaction: Interaction,
@@ -488,6 +442,15 @@ class Social(commands.GroupCog, group_name="social"):
     @group_1.command(
         name="highfive",
         description="high five someone!"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def highfive(
         self,
@@ -514,6 +477,15 @@ class Social(commands.GroupCog, group_name="social"):
         name="rate",
         description="use our very accurate rating system!!1!!"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def rate(
         self,
         interaction: Interaction,
@@ -532,6 +504,18 @@ class Social(commands.GroupCog, group_name="social"):
     @group_1.command(
         name="nominate",
         description="this user is most likely to..."
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    @app_commands.describe(
+        user="user to nominate"
     )
     async def nominate(
         self,
@@ -569,15 +553,23 @@ class Social(commands.GroupCog, group_name="social"):
         name="court",
         description="put someone on trial"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     @app_commands.describe(
         user="the defendant"
     )
     async def court(
         self,
         interaction: discord.Interaction,
-        user: discord.Member
+        user: discord.User
     ):
-
         crimes = [
             "holding a salmon in a suspicious manner",
             "tax evasion of imaginary currency",
@@ -657,17 +649,25 @@ class Social(commands.GroupCog, group_name="social"):
         name="ship",
         description="check compatibility between two users"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     @app_commands.describe(
         user1="first user",
         user2="second user"
     )
     async def ship(
         self,
-        interaction: discord.Interaction,
-        user1: discord.Member,
-        user2: discord.Member
+        interaction: Interaction,
+        user1: discord.User,
+        user2: discord.User
     ):
-
         seed = (user1.id + user2.id) % 100
         score = (seed * random.randint(1, 100)) % 101
 
@@ -719,12 +719,21 @@ class Social(commands.GroupCog, group_name="social"):
         name="howsilly",
         description="how silly is a user? very, they are very silly!"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     @app_commands.describe(
         user="user to silly check"
     )
     async def howsilly(
         self,
-        interaction: discord.Interaction,
+        interaction: Interaction,
         user: discord.User = None
     ):
         if user is None:
@@ -743,6 +752,15 @@ class Social(commands.GroupCog, group_name="social"):
     @group_1.command(
         name="howdumb",
         description="how dumb is a user? very, they are very dumb!"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     @app_commands.describe(
         user="user to dumb check"
@@ -769,6 +787,15 @@ class Social(commands.GroupCog, group_name="social"):
         name="howcustom",
         description="Check how much of something a user is!"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     @app_commands.describe(
         thing="What should they be checked for?",
         user="User to check"
@@ -786,24 +813,32 @@ class Social(commands.GroupCog, group_name="social"):
 
         if thing.lower() == "trans" and user.id == 1033895617505788015:
             score = 100
-
             embed = discord.Embed(
-                        title=f"How {thing.title()}? 🤔",
-                        description=f"**{user.name}** is **{score}%** {thing}! (also she is very autistic just sayin like extremely, like beyond the point of no return.)",
-                        color=get_success_colour()
-                    )
+                title=f"How {thing.title()}? 🤔",
+                description=f"**{user.name}** is **{score}%** {thing}!",
+                color=get_success_colour()
+            )
         else:
             embed = discord.Embed(
-                        title=f"How {thing.title()}? 🤔",
-                        description=f"**{user.name}** is **{score}%** {thing}!",
-                        color=get_success_colour()
-                    )
+                title=f"How {thing.title()}? 🤔",
+                description=f"**{user.name}** is **{score}%** {thing}!",
+                color=get_success_colour()
+            )
 
         await interaction.response.send_message(embed=embed)
 
     @group_1.command(
         name="lonely",
         description="check how lonely someone is"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def lonely(
         self,
@@ -827,6 +862,15 @@ class Social(commands.GroupCog, group_name="social"):
         name="iq",
         description="check someone's iq (definitely accurate)"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def iq(
         self,
         interaction: Interaction,
@@ -848,6 +892,15 @@ class Social(commands.GroupCog, group_name="social"):
     @group_1.command(
         name="eightball",
         description="speak to the magic Clanker 8 ball"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def eightball(
         self,
@@ -885,6 +938,15 @@ class Social(commands.GroupCog, group_name="social"):
     @group_1.command(
         name="sevenball",
         description="speak to the magic Clanker 7 ball"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def sevenball(
         self,
@@ -930,6 +992,15 @@ class Social(commands.GroupCog, group_name="social"):
         name="clicker",
         description="click the global button!"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def clicker(
         self,
         interaction: Interaction
@@ -955,6 +1026,15 @@ class Social(commands.GroupCog, group_name="social"):
         name="profile",
         description="View a Clanker profile"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     @app_commands.describe(
         user="User to view"
     )
@@ -963,7 +1043,6 @@ class Social(commands.GroupCog, group_name="social"):
         interaction: Interaction,
         user: discord.User = None
     ):
-
         if user is None:
             user = interaction.user
 
@@ -1015,6 +1094,15 @@ class Social(commands.GroupCog, group_name="social"):
     @group_1.command(
         name="badadvice",
         description="get some bad advice"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def badadvice(
         self,
@@ -1112,6 +1200,15 @@ class Social(commands.GroupCog, group_name="social"):
         name="goodadvice",
         description="get some actually good advice"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def goodadvice(
         self,
         interaction: Interaction
@@ -1182,6 +1279,15 @@ class Social(commands.GroupCog, group_name="social"):
         name="message",
         description="generate a fake Discord message"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     @app_commands.describe(
         username="Username shown in the fake message",
         content="Content of the fake message",
@@ -1196,7 +1302,6 @@ class Social(commands.GroupCog, group_name="social"):
         color: str = "#5865f2",
         timestamp: str = None
     ):
-
         if timestamp is None:
             timestamp = datetime.now(timezone.utc).isoformat()
 
@@ -1251,16 +1356,30 @@ class Social(commands.GroupCog, group_name="social"):
                 ),
                 ephemeral=True
             )
-            
+
     @group_1.command(
         name="torture",
         description="Torture yourself with a random AITA post"
     )
-    async def torture(self, interaction: Interaction):
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def torture(
+        self,
+        interaction: Interaction
+    ):
         await interaction.response.defer()
 
         async with aiohttp.ClientSession() as session:
-            async with session.get("https://api.pxsl.dev/aita.json") as response:
+            async with session.get(
+                "https://api.pxsl.dev/aita.json"
+            ) as response:
                 if response.status != 200:
                     await interaction.followup.send(
                         embed=discord.Embed(
@@ -1282,9 +1401,14 @@ class Social(commands.GroupCog, group_name="social"):
             color=get_success_colour()
         )
 
-        embed.set_footer(text="r/AmItheAsshole • Powered by Pxsl's API and Reddit")
+        embed.set_footer(
+            text="r/AmItheAsshole • Powered by Pxsl's API and Reddit"
+        )
 
-        message = await interaction.followup.send(embed=embed, wait=True)
+        message = await interaction.followup.send(
+            embed=embed,
+            wait=True
+        )
 
         await message.add_reaction("✅")
         await message.add_reaction("❌")

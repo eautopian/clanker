@@ -36,68 +36,6 @@ class Basic(commands.GroupCog, group_name="basic"):
         self.bot = bot
         self.bot_start_time = datetime.now(timezone.utc)
 
-    async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        if interaction.guild is None:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Server Installation Required",
-                    description=(
-                        "Sorry, Clanker can only be installed in a server.\n\n"
-                        "Please add Clanker to a server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        try:
-            await interaction.guild.fetch_member(self.bot.user.id)
-
-        except discord.NotFound:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Clanker Isn't Installed",
-                    description=(
-                        "Clanker isn't installed in this server.\n\n"
-                        "Please add Clanker to this server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        except discord.Forbidden:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Unable to Check",
-                    description=(
-                        "I couldn't verify whether Clanker is installed "
-                        "in this server."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        except discord.HTTPException:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Discord Error",
-                    description=(
-                        "Discord didn't let me verify whether Clanker "
-                        "is installed in this server. Please try again."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        return True
-
     group_1 = app_commands.Group(
         name="1",
         description="Basic - page 1"
@@ -107,6 +45,15 @@ class Basic(commands.GroupCog, group_name="basic"):
         name="welcome",
         description="show the Clanker welcome message"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def welcome(
         self,
         interaction: discord.Interaction
@@ -115,20 +62,16 @@ class Basic(commands.GroupCog, group_name="basic"):
             title="👋 Thanks for adding Clanker!",
             description=(
                 "Thanks for inviting **Clanker** to your server! ❤️\n\n"
-
                 "## 💬 Join the Clanker Community\n"
                 "Clanker isn't just a bot - it's a community too!\n\n"
                 "Join our Discord to **meet other Clanker users, chat, share memes, "
                 "suggest new features, report bugs, get updates, and take part in "
                 "community events.**\n\n"
-
                 "We've got **60,000+ users and 100+ servers**, and we'd love to have "
                 "you be part of it. ❤️\n\n"
-
                 "## 🔒 Privacy & Legal\n"
                 "Want to know what information Clanker stores and how it's used? "
                 "You can find our legal and privacy information using the button below.\n\n"
-
                 "**Thanks for choosing Clanker! 🔧**"
             ),
             colour=get_success_colour()
@@ -146,6 +89,15 @@ class Basic(commands.GroupCog, group_name="basic"):
     @group_1.command(
         name="hello",
         description="say hello to the bot"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def hello(
         self,
@@ -176,6 +128,15 @@ class Basic(commands.GroupCog, group_name="basic"):
         name="ping",
         description="get bot's latency"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def ping(
         self,
         interaction: Interaction
@@ -192,11 +153,21 @@ class Basic(commands.GroupCog, group_name="basic"):
         name="uptime",
         description="how long bot been online"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def uptime(
         self,
         interaction: Interaction
     ):
         now = datetime.now(timezone.utc)
+
         uptime_seconds = (
             now - self.bot_start_time
         ).total_seconds()
@@ -237,11 +208,21 @@ class Basic(commands.GroupCog, group_name="basic"):
         name="usercount",
         description="how many users does Clanker serve"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def usercount(
         self,
         interaction: Interaction
     ):
         servers = len(self.bot.guilds)
+
         users = sum(
             g.member_count or 0
             for g in self.bot.guilds
@@ -261,6 +242,15 @@ class Basic(commands.GroupCog, group_name="basic"):
     @group_1.command(
         name="cmdcount",
         description="how many commands Clanker has"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def cmdcount(
         self,
@@ -303,6 +293,15 @@ class Basic(commands.GroupCog, group_name="basic"):
         name="version",
         description="see the bot's version"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def version(
         self,
         interaction: discord.Interaction
@@ -331,9 +330,18 @@ class Basic(commands.GroupCog, group_name="basic"):
         name="info",
         description="view information about Clanker"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def info(
         self,
-        interaction: discord.Interaction
+        interaction: Interaction
     ):
         with open("data.json", "r") as f:
             data = json.load(f)
@@ -401,6 +409,15 @@ class Basic(commands.GroupCog, group_name="basic"):
         name="vote",
         description="vote for the bot on top.gg"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def vote(
         self,
         interaction: discord.Interaction
@@ -428,9 +445,18 @@ class Basic(commands.GroupCog, group_name="basic"):
         name="invite",
         description="get bot invite link"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def invite(
         self,
-        interaction: Interaction
+        interaction: discord.Interaction
     ):
         embed = discord.Embed(
             title="Invite Me 🤖",
@@ -447,7 +473,6 @@ class Basic(commands.GroupCog, group_name="basic"):
         cmds = []
 
         for cmd in self.bot.tree.walk_commands():
-
             if isinstance(cmd, app_commands.Group):
                 continue
 
@@ -459,11 +484,19 @@ class Basic(commands.GroupCog, group_name="basic"):
         name="help",
         description="get help with the bot"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def help(
         self,
         interaction: discord.Interaction
     ):
-
         def is_admin(user_id):
             return (
                 user_id in self.bot.data.get("admins", [])
@@ -475,7 +508,6 @@ class Basic(commands.GroupCog, group_name="basic"):
         admin_commands = []
 
         for cmd in self.get_all_commands():
-
             cog_name = (
                 cmd.binding.__class__.__name__
                 if getattr(cmd, "binding", None)
@@ -483,7 +515,6 @@ class Basic(commands.GroupCog, group_name="basic"):
             )
 
             if cog_name == "Admin":
-
                 if is_admin(interaction.user.id):
                     admin_commands.append(cmd)
 
@@ -500,7 +531,6 @@ class Basic(commands.GroupCog, group_name="basic"):
         pages = []
 
         for category, cmds in categories.items():
-
             cmds = sorted(
                 cmds,
                 key=lambda c: c.name
@@ -551,13 +581,10 @@ class Basic(commands.GroupCog, group_name="basic"):
                 )
             )
 
-
         class HelpView(discord.ui.View):
-
             def __init__(self):
                 super().__init__(timeout=120)
                 self.current = 0
-
 
             @discord.ui.button(
                 label="◀️",
@@ -577,7 +604,6 @@ class Basic(commands.GroupCog, group_name="basic"):
                     view=self
                 )
 
-
             @discord.ui.button(
                 label="▶️",
                 style=discord.ButtonStyle.gray
@@ -596,7 +622,6 @@ class Basic(commands.GroupCog, group_name="basic"):
                     view=self
                 )
 
-
         view = HelpView()
 
         await interaction.response.send_message(
@@ -604,14 +629,23 @@ class Basic(commands.GroupCog, group_name="basic"):
             view=view,
             ephemeral=True
         )
-        
+
     @group_1.command(
         name="credits",
         description="see the people who somehow made Clanker possible"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def credits(
         self,
-        interaction: Interaction
+        interaction: discord.Interaction
     ):
         embed = discord.Embed(
             title="🛠️ the people behind Clanker",
@@ -619,12 +653,15 @@ class Basic(commands.GroupCog, group_name="basic"):
                 "Clanker didn't magically appear out of nowhere.\n\n"
                 "A bunch of absolutely wonderful people have helped build, "
                 "test, support, and tolerate this stupid little bot.\n\n"
-                "[**view the full credits →**](https://clanker.pxsl.dev/credits/)"
+                "[**view the full credits →**]"
+                "(https://clanker.pxsl.dev/credits/)"
             ),
             color=get_success_colour()
         )
 
-        embed.set_footer(text="thank you to everyone who helped make Clanker what it is 💜")
+        embed.set_footer(
+            text="thank you to everyone who helped make Clanker what it is 💜"
+        )
 
         await interaction.response.send_message(embed=embed)
 
@@ -632,9 +669,18 @@ class Basic(commands.GroupCog, group_name="basic"):
         name="thanks",
         description="support the bot and its developer :)"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def thanks(
         self,
-        interaction: Interaction
+        interaction: discord.Interaction
     ):
         embed = discord.Embed(
             title="Thank you so much for wanting to support me 💜",

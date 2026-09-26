@@ -14,6 +14,7 @@ import asyncio
 import random
 from cogs.theming import get_fail_colour, get_success_colour
 
+
 class Video(commands.GroupCog, group_name="video"):
     video_1 = app_commands.Group(
         name="1",
@@ -44,70 +45,6 @@ class Video(commands.GroupCog, group_name="video"):
     def __init__(self, bot):
         self.bot = bot
         self.video_lock = asyncio.Semaphore(1)
-
-    async def interaction_check(
-        self,
-        interaction: discord.Interaction
-    ) -> bool:
-        if interaction.guild is None:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Server Installation Required",
-                    description=(
-                        "Sorry, Clanker can only be installed in a server.\n\n"
-                        "Please add Clanker to a server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        try:
-            await interaction.guild.fetch_member(
-                self.bot.user.id
-            )
-        except discord.NotFound:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Clanker Isn't Installed",
-                    description=(
-                        "Clanker isn't installed in this server.\n\n"
-                        "Please add Clanker to this server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-        except discord.Forbidden:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Unable to Check",
-                    description=(
-                        "I couldn't verify whether Clanker is installed "
-                        "in this server."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-        except discord.HTTPException:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Discord Error",
-                    description=(
-                        "Discord didn't let me verify whether Clanker "
-                        "is installed in this server. Please try again."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        return True
 
     async def send_error(
         self,
@@ -152,6 +89,7 @@ class Video(commands.GroupCog, group_name="video"):
 
                 if replied.attachments:
                     media_url = replied.attachments[0].url
+
             except:
                 pass
 
@@ -182,6 +120,7 @@ class Video(commands.GroupCog, group_name="video"):
                     media_url,
                     allow_redirects=True
                 ) as response:
+
                     if response.status != 200:
                         return False, "Failed to download the media."
 
@@ -691,6 +630,15 @@ class Video(commands.GroupCog, group_name="video"):
         name="invert",
         description="Invert a video"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def invert(
         self,
         interaction: Interaction,
@@ -715,6 +663,15 @@ class Video(commands.GroupCog, group_name="video"):
         name="greyscale",
         description="Convert a video to greyscale"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def greyscale(
         self,
         interaction: Interaction,
@@ -738,6 +695,15 @@ class Video(commands.GroupCog, group_name="video"):
     @video_1.command(
         name="deepfry",
         description="Deep fry a video"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def deepfry(
         self,
@@ -778,6 +744,15 @@ class Video(commands.GroupCog, group_name="video"):
         name="blur",
         description="Blur a video"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def blur(
         self,
         interaction: Interaction,
@@ -809,6 +784,15 @@ class Video(commands.GroupCog, group_name="video"):
     @video_1.command(
         name="bloom",
         description="Add bloom effect to a video"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def bloom(
         self,
@@ -847,6 +831,15 @@ class Video(commands.GroupCog, group_name="video"):
     @video_1.command(
         name="pixelate",
         description="Pixelate a video"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def pixelate(
         self,
@@ -894,6 +887,15 @@ class Video(commands.GroupCog, group_name="video"):
         name="brighten",
         description="Brighten a video"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def brighten(
         self,
         interaction: Interaction,
@@ -925,6 +927,15 @@ class Video(commands.GroupCog, group_name="video"):
     @video_1.command(
         name="darken",
         description="Darken a video"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def darken(
         self,
@@ -960,6 +971,15 @@ class Video(commands.GroupCog, group_name="video"):
     @video_1.command(
         name="sharpen",
         description="Sharpen a video"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def sharpen(
         self,
@@ -997,6 +1017,15 @@ class Video(commands.GroupCog, group_name="video"):
         name="contrast",
         description="Change the contrast of a video"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def contrast(
         self,
         interaction: Interaction,
@@ -1028,6 +1057,15 @@ class Video(commands.GroupCog, group_name="video"):
     @video_1.command(
         name="gif",
         description="Turn a video into a GIF"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def gif(
         self,
@@ -1148,6 +1186,15 @@ class Video(commands.GroupCog, group_name="video"):
     @video_1.command(
         name="caption",
         description="Add a caption to a video"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def caption(
         self,
@@ -1418,6 +1465,15 @@ class Video(commands.GroupCog, group_name="video"):
         name="frames",
         description="Extract frames from a video"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def frames(
         self,
         interaction: Interaction,
@@ -1559,6 +1615,15 @@ class Video(commands.GroupCog, group_name="video"):
     @video_1.command(
         name="boomerang",
         description="Create a boomerang from a video"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def boomerang(
         self,
@@ -1743,6 +1808,15 @@ class Video(commands.GroupCog, group_name="video"):
         name="destroy",
         description="Absolutely destroy a video"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def destroy(
         self,
         interaction: Interaction,
@@ -1911,21 +1985,33 @@ class Video(commands.GroupCog, group_name="video"):
         name="rotate",
         description="Change the Rotation of a video"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def rotate(
         self,
         interaction: Interaction,
         angle: float = 90.0,
         media: discord.Attachment = None,
         url: str = None,
-        clockwise: bool = True,
+        clockwise: bool = True
     ):
         if clockwise:
             angle = -angle
-        
+
         def processor(img):
-            return img.rotate(angle=angle)
+            return img.rotate(
+                angle=angle
+            )
 
         clockwiseStr = "Counter-clockwise"
+
         if clockwise:
             clockwiseStr = "Clockwise"
 
@@ -1942,21 +2028,32 @@ class Video(commands.GroupCog, group_name="video"):
         name="flip",
         description="Flips a video"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def flip(
         self,
         interaction: Interaction,
         media: discord.Attachment = None,
-        url: str = None,
+        url: str = None
     ):
         def processor(img):
-            return img.transpose(method=Image.Transpose.FLIP_LEFT_RIGHT)
+            return img.transpose(
+                method=Image.Transpose.FLIP_LEFT_RIGHT
+            )
 
         await self.process_effect(
             interaction,
             media,
             url,
             processor,
-            f"Flipped Video 🔄",
+            "Flipped Video 🔄",
             "flipped.mp4"
         )
 

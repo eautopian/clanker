@@ -1,6 +1,6 @@
-# im a tehxt file!
+# im a text file!
 
-from discord import app_commands, Interaction, User, TextChannel
+from discord import app_commands, Interaction
 from discord.ext import commands
 import discord
 import random
@@ -8,16 +8,12 @@ from cogs.theming import get_fail_colour, get_success_colour
 
 def uwuify(text: str) -> str:
     faces = ["(・`ω´・)", "uwu", "owo", ">w<", "^w^"]
-
     text = text.replace("r", "w").replace("l", "w")
     text = text.replace("R", "W").replace("L", "W")
-
     return text + " " + random.choice(faces)
-
 
 def reverse_text(text: str) -> str:
     return text[::-1]
-
 
 def random_case(text: str) -> str:
     return "".join(
@@ -25,24 +21,20 @@ def random_case(text: str) -> str:
         for c in text
     )
 
-
 def no_vowels(text: str) -> str:
     return "".join(
         c for c in text
         if c.lower() not in "aeiou"
     )
 
-
 def snake_case(text: str) -> str:
     return text.replace(" ", "_").lower()
-
 
 def mock(text: str) -> str:
     return "".join(
         c.upper() if i % 2 else c.lower()
         for i, c in enumerate(text)
     )
-
 
 def leet(text: str) -> str:
     mapping = str.maketrans({
@@ -53,16 +45,13 @@ def leet(text: str) -> str:
         "s": "5",
         "t": "7"
     })
-
     return text.translate(mapping)
-
 
 def zalgo(text: str) -> str:
     zalgo_chars = [
         "̍", "̎", "̄", "̅", "̿",
         "̑", "̆", "̐", "͒", "͗", "͑"
     ]
-
     return "".join(
         c + "".join(
             random.choice(zalgo_chars)
@@ -75,68 +64,6 @@ class Text(commands.GroupCog, group_name="text"):
     def __init__(self, bot):
         self.bot = bot
 
-    async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        if interaction.guild is None:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Server Installation Required",
-                    description=(
-                        "Sorry, Clanker can only be installed in a server.\n\n"
-                        "Please add Clanker to a server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        try:
-            await interaction.guild.fetch_member(self.bot.user.id)
-
-        except discord.NotFound:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Clanker Isn't Installed",
-                    description=(
-                        "Clanker isn't installed in this server.\n\n"
-                        "Please add Clanker to this server before using these commands."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        except discord.Forbidden:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Unable to Check",
-                    description=(
-                        "I couldn't verify whether Clanker is installed "
-                        "in this server."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        except discord.HTTPException:
-            await interaction.response.send_message(
-                embed=discord.Embed(
-                    title="❌ Discord Error",
-                    description=(
-                        "Discord didn't let me verify whether Clanker "
-                        "is installed in this server. Please try again."
-                    ),
-                    color=get_fail_colour()
-                ),
-                ephemeral=True
-            )
-            return False
-
-        return True
-
     async def transform_text(
         self,
         interaction: Interaction,
@@ -144,21 +71,6 @@ class Text(commands.GroupCog, group_name="text"):
         action_name: str,
         transform_func
     ):
-        channel = interaction.channel
-
-        if not isinstance(channel, TextChannel):
-            embed = discord.Embed(
-                title="Error ❌",
-                description="Cannot use this command here!",
-                color=get_fail_colour()
-            )
-
-            await interaction.response.send_message(
-                embed=embed,
-                ephemeral=True
-            )
-            return
-
         transformed = transform_func(text)
 
         embed = discord.Embed(
@@ -181,6 +93,15 @@ class Text(commands.GroupCog, group_name="text"):
     @app_commands.describe(
         text="Text to transform"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def uwu(
         self,
         interaction: Interaction,
@@ -193,13 +114,21 @@ class Text(commands.GroupCog, group_name="text"):
             uwuify
         )
 
-
     @group_1.command(
         name="caps",
         description="uppercase text"
     )
     @app_commands.describe(
         text="Text to transform"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def caps(
         self,
@@ -213,13 +142,21 @@ class Text(commands.GroupCog, group_name="text"):
             str.upper
         )
 
-
     @group_1.command(
         name="lower",
         description="lowercase text"
     )
     @app_commands.describe(
         text="Text to transform"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def lower(
         self,
@@ -233,13 +170,21 @@ class Text(commands.GroupCog, group_name="text"):
             str.lower
         )
 
-
     @group_1.command(
         name="reverse",
         description="reverse text"
     )
     @app_commands.describe(
         text="Text to transform"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def reverse(
         self,
@@ -253,13 +198,21 @@ class Text(commands.GroupCog, group_name="text"):
             reverse_text
         )
 
-
     @group_1.command(
         name="randomcase",
         description="randomize letter casing"
     )
     @app_commands.describe(
         text="Text to transform"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def randomcase(
         self,
@@ -280,6 +233,15 @@ class Text(commands.GroupCog, group_name="text"):
     @app_commands.describe(
         text="Text to transform"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def novowels(
         self,
         interaction: Interaction,
@@ -299,6 +261,15 @@ class Text(commands.GroupCog, group_name="text"):
     @app_commands.describe(
         text="Text to transform"
     )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
     async def snake(
         self,
         interaction: Interaction,
@@ -311,13 +282,21 @@ class Text(commands.GroupCog, group_name="text"):
             snake_case
         )
 
-
     @group_1.command(
         name="mock",
         description="mocking spongebob text"
     )
     @app_commands.describe(
         text="Text to transform"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def mock_cmd(
         self,
@@ -331,13 +310,21 @@ class Text(commands.GroupCog, group_name="text"):
             mock
         )
 
-
     @group_1.command(
         name="leet",
         description="make text l33t c4s3"
     )
     @app_commands.describe(
         text="Text to transform"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def leet_cmd(
         self,
@@ -351,13 +338,21 @@ class Text(commands.GroupCog, group_name="text"):
             leet
         )
 
-
     @group_1.command(
         name="zalgo",
         description="make text z̍͗͑a̎̄̐l̅̿͒g̑̆͗o"
     )
     @app_commands.describe(
         text="Text to transform"
+    )
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
     )
     async def zalgo_cmd(
         self,

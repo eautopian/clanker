@@ -8,6 +8,7 @@ from cogs.theming import get_fail_colour, get_success_colour
 class WordleView(discord.ui.View):
     def __init__(self, user_id, word, valid_words):
         super().__init__(timeout=900)
+
         self.user_id = user_id
         self.word = word.lower()
         self.valid_words = valid_words
@@ -19,6 +20,7 @@ class WordleView(discord.ui.View):
             style=discord.ButtonStyle.primary,
             emoji="✏️"
         )
+
         self.guess_button.callback = self.guess
 
         self.quit_button = discord.ui.Button(
@@ -26,6 +28,7 @@ class WordleView(discord.ui.View):
             style=discord.ButtonStyle.danger,
             emoji="🚪"
         )
+
         self.quit_button.callback = self.quit
 
         self.add_item(self.guess_button)
@@ -38,10 +41,12 @@ class WordleView(discord.ui.View):
                 description="You can't interact with someone else's game.",
                 color=get_fail_colour()
             )
+
             await interaction.response.send_message(
                 embed=embed,
                 ephemeral=True
             )
+
             return False
 
         return True
@@ -79,9 +84,11 @@ class WordleView(discord.ui.View):
             description=f"```text\n{self.get_grid()}\n```",
             color=0x5865F2
         )
+
         embed.set_footer(
             text=f"Attempt {len(self.guesses)}/6 • Only you can play this game"
         )
+
         return embed
 
     async def guess(self, interaction: Interaction):
@@ -91,13 +98,17 @@ class WordleView(discord.ui.View):
                 description="This game is already finished.",
                 color=get_fail_colour()
             )
+
             await interaction.response.send_message(
                 embed=embed,
                 ephemeral=True
             )
+
             return
 
-        await interaction.response.send_modal(WordleModal(self))
+        await interaction.response.send_modal(
+            WordleModal(self)
+        )
 
     async def quit(self, interaction: Interaction):
         if self.finished:
@@ -106,10 +117,12 @@ class WordleView(discord.ui.View):
                 description="This game is already finished.",
                 color=get_fail_colour()
             )
+
             await interaction.response.send_message(
                 embed=embed,
                 ephemeral=True
             )
+
             return
 
         self.finished = True
@@ -117,12 +130,15 @@ class WordleView(discord.ui.View):
         self.quit_button.disabled = True
 
         embed = self.get_embed()
+
         embed.title = "Wordle — You quit! 🚪"
+
         embed.description = (
             f"```text\n{self.get_grid()}\n```\n"
             f"The word was **{self.word}**.\n"
             f"Better luck next time!"
         )
+
         embed.color = get_fail_colour()
         embed.set_footer(text="Game ended by you.")
 
@@ -156,10 +172,12 @@ class WordleModal(discord.ui.Modal, title="Make a guess"):
                 description="This game is already finished.",
                 color=get_fail_colour()
             )
+
             await interaction.response.send_message(
                 embed=embed,
                 ephemeral=True
             )
+
             return
 
         guess = self.guess_input.value.strip().lower()
@@ -170,10 +188,12 @@ class WordleModal(discord.ui.Modal, title="Make a guess"):
                 description="Your guess must contain exactly **5 letters**.",
                 color=get_fail_colour()
             )
+
             await interaction.response.send_message(
                 embed=embed,
                 ephemeral=True
             )
+
             return
 
         if guess not in self.game.valid_words:
@@ -182,27 +202,33 @@ class WordleModal(discord.ui.Modal, title="Make a guess"):
                 description=f"**{guess}** isn't in the Wordle word list.",
                 color=get_fail_colour()
             )
+
             await interaction.response.send_message(
                 embed=embed,
                 ephemeral=True
             )
+
             return
 
         self.game.guesses.append(guess)
 
         if guess == self.game.word:
             attempts = len(self.game.guesses)
+
             self.game.finished = True
             self.game.guess_button.disabled = True
             self.game.quit_button.disabled = True
 
             embed = self.game.get_embed()
+
             embed.title = "Wordle — You won! 🎉"
+
             embed.description = (
                 f"```text\n{self.game.get_grid()}\n```\n"
                 f"You guessed the correct word **{self.game.word}** "
                 f"in **{attempts} attempt{'s' if attempts != 1 else ''}!**"
             )
+
             embed.color = get_success_colour()
             embed.set_footer(text="Congratulations! 🎉")
 
@@ -210,6 +236,7 @@ class WordleModal(discord.ui.Modal, title="Make a guess"):
                 embed=embed,
                 view=self.game
             )
+
             return
 
         if len(self.game.guesses) >= 6:
@@ -218,12 +245,15 @@ class WordleModal(discord.ui.Modal, title="Make a guess"):
             self.game.quit_button.disabled = True
 
             embed = self.game.get_embed()
+
             embed.title = "Wordle — Game over 💀"
+
             embed.description = (
                 f"```text\n{self.game.get_grid()}\n```\n"
                 f"The word was **{self.game.word}**.\n"
                 f"Better luck next time!"
             )
+
             embed.color = get_fail_colour()
             embed.set_footer(text="Maybe you'll get it next time!")
 
@@ -231,6 +261,7 @@ class WordleModal(discord.ui.Modal, title="Make a guess"):
                 embed=embed,
                 view=self.game
             )
+
             return
 
         await interaction.response.edit_message(
@@ -251,7 +282,19 @@ class Games(commands.GroupCog, group_name="games"):
         name="wordle",
         description="Start a random wordle."
     )
-    async def wordle(self, interaction: Interaction):
+    @app_commands.allowed_contexts(
+        guilds=True,
+        dms=True,
+        private_channels=True
+    )
+    @app_commands.allowed_installs(
+        guilds=True,
+        users=True
+    )
+    async def wordle(
+        self,
+        interaction: Interaction
+    ):
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(
@@ -288,7 +331,11 @@ class Games(commands.GroupCog, group_name="games"):
                 ),
                 color=get_fail_colour()
             )
-            await interaction.response.send_message(embed=embed)
+
+            await interaction.response.send_message(
+                embed=embed
+            )
+
             return
 
         game = WordleView(
@@ -298,13 +345,15 @@ class Games(commands.GroupCog, group_name="games"):
         )
 
         embed = game.get_embed()
+
         embed.description = (
-            f"Guess the **5-letter word**!\n\n"
+            "Guess the **5-letter word**!\n\n"
             f"```text\n{game.get_grid()}\n```\n"
-            f"🟩 Correct letter and position\n"
-            f"🟨 Correct letter, wrong position\n"
-            f"⬛ Letter isn't in the word"
+            "🟩 Correct letter and position\n"
+            "🟨 Correct letter, wrong position\n"
+            "⬛ Letter isn't in the word"
         )
+
         embed.set_author(
             name=interaction.user.display_name,
             icon_url=interaction.user.display_avatar.url
