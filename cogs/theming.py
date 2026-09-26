@@ -10,7 +10,6 @@ THEMES = {
         "banner": "assets/halloween/banner.png",
         "name": "Spooky Clanker 🎃",
     },
-
     "fools": {
         "success": discord.Color.yellow(),
         "fail": discord.Color.magenta(),
@@ -18,7 +17,6 @@ THEMES = {
         "banner": "assets/fools/banner.png",
         "name": "clanker uwu :3",
     },
-
     "christmas": {
         "success": discord.Color.green(),
         "fail": discord.Color.red(),
@@ -26,7 +24,6 @@ THEMES = {
         "banner": "assets/christmas/banner.png",
         "name": "Merry Clanker🎄",
     },
-
     "easter": {
         "success": discord.Color.green(),
         "fail": discord.Color.pink(),
@@ -34,7 +31,6 @@ THEMES = {
         "banner": "assets/easter/banner.png",
         "name": "Clanker Bunny 🐰",
     },
-
     "default": {
         "success": discord.Color.blurple(),
         "fail": discord.Color.red(),
@@ -79,37 +75,51 @@ class Theming(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.current_date = None
+        self.applied_theme = None
         self.update_theme.start()
 
     def cog_unload(self):
         self.update_theme.cancel()
 
     async def apply_theme(self):
+        global cached_theme
+
         now = datetime.datetime.now(datetime.timezone.utc)
         date = now.date()
+        theme = get_theme()
 
-        if self.current_date == date:
+        if self.current_date == date and self.applied_theme == theme:
             return
 
-        global cached_theme
-        cached_theme = get_theme()
+        cached_theme = theme
         self.current_date = date
+        self.applied_theme = theme
 
+        name = get_name()
         avatar_file = get_avatar()
         banner_file = get_banner()
-        name = get_name()
 
-        with open(avatar_file, "rb") as f:
-            avatar = f.read()
+        if self.bot.user.name != name:
+            try:
+                await self.bot.user.edit(username=name)
+            except discord.HTTPException as e:
+                print(f"[THEMING] Failed to update name: {e}")
 
-        with open(banner_file, "rb") as f:
-            banner = f.read()
+        try:
+            with open(avatar_file, "rb") as f:
+                avatar = f.read()
 
-        await self.bot.user.edit(
-            username=name,
-            avatar=avatar,
-            banner=banner
-        )
+            await self.bot.user.edit(avatar=avatar)
+        except discord.HTTPException as e:
+            print(f"[THEMING] Failed to update avatar: {e}")
+
+        try:
+            with open(banner_file, "rb") as f:
+                banner = f.read()
+
+            await self.bot.user.edit(banner=banner)
+        except discord.HTTPException as e:
+            print(f"[THEMING] Failed to update banner: {e}")
 
     @tasks.loop(
         time=datetime.time(
